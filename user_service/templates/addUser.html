@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Add User</h3>
+
+{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+
+<form action="/users/create" method="post">
+  <p>Name: <input type="text" name="name" value="{{name}}"></p>
+  <p>Password: <input type="password" name="password"></p>
+  <p>Role:
+    <select name="role">
+      {% for r in roles %}
+      <option value="{{r}}" {% if r == role %}selected{% endif %}>{{r}}</option>
+      {% endfor %}
+    </select>
+  </p>
+  <input type="submit">
+</form>
+{% endblock %}

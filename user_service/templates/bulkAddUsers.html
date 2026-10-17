@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Bulk Add Users</h3>
+
+<p>One user per line: <code>name,password,role</code></p>
+<p>Valid roles: {{ roles | join(", ") }}</p>
+
+{% if errors %}
+<p style="color:red">No users were added. Fix the following lines:</p>
+<ul style="color:red">
+  {% for e in errors %}<li>{{e}}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<form action="/users/bulk" method="post">
+  <textarea name="usersText" rows="12" cols="50">{{usersText}}</textarea>
+  <p><input type="submit"></p>
+</form>
+{% endblock %}
