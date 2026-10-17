@@ -1,2 +1,5 @@
 26-27-projecto-p1.pdf
 .DS_Store
+venv/
+__pycache__/
+*.sqlite

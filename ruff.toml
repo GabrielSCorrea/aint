@@ -1,0 +1,7 @@
+# Ruff linter + formatter configuration: https://docs.astral.sh/ruff/configuration/
+
+src = ["user_service", "admin_service", "printing_service", "correction_service"]
+
+[lint]
+# E/W: pycodestyle, F: pyflakes, I: import sorting, B: common bug patterns
+select = ["E", "W", "F", "I", "B"]
