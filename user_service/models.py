@@ -1,8 +1,18 @@
+from enum import IntEnum
+
 from sqlalchemy import Column, Integer, String
 
 from settings import Base, engine, session
 
-ROLES = ["administrator", "professor", "student", "invigilator"]
+
+class Role(IntEnum):
+    ADMINISTRATOR = 0
+    PROFESSOR = 1
+    STUDENT = 2
+    INVIGILATOR = 3
+
+
+ROLES = [role.name.lower() for role in Role]
 
 
 class User(Base):
@@ -10,10 +20,18 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    role = Column(String, nullable=False)
+    role = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<User(id=%d, name='%s', role='%s')>" % (self.id, self.name, self.role)
+        return "<User(id=%d, name='%s', role='%s')>" % (
+            self.id,
+            self.name,
+            self.roleName,
+        )
+
+    @property
+    def roleName(self):
+        return Role(self.role).name.lower()
 
     @staticmethod
     def validate(name, password, role):
@@ -31,7 +49,7 @@ class User(Base):
 
     @classmethod
     def create(cls, name, password, role):
-        user = cls(name=name, password=password, role=role)
+        user = cls(name=name, password=password, role=Role[role.upper()])
         session.add(user)
         session.commit()
         return user
@@ -39,7 +57,7 @@ class User(Base):
     @classmethod
     def bulkCreate(cls, usersData):
         for name, password, role in usersData:
-            session.add(cls(name=name, password=password, role=role))
+            session.add(cls(name=name, password=password, role=Role[role.upper()]))
         session.commit()
 
 
