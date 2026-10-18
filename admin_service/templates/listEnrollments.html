@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Student Enrollments</h3>
+
+{% if enrollments %}
+<table border="1">
+  <tr><th>Student Id</th><th>Exam Id</th><th>Date</th><th>Course</th></tr>
+  {% for en in enrollments %}
+  <tr>
+    <td>{{en.studentId}}</td>
+    <td>{{en.exam.id}}</td>
+    <td>{{en.exam.date}}</td>
+    <td>{{en.exam.course}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No enrollments.</p>
+{% endif %}
+{% endblock %}

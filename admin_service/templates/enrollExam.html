@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Enroll Students: {{exam.course}} ({{exam.date}})</h3>
+
+{% if newIds is defined %}
+<p style="color:green">
+  Enrolled {{newIds | length}} new student(s){% if newIds %}: {{newIds | join(", ")}}{% endif %}.
+  {% if skipped %}{{skipped}} already enrolled student(s) skipped.{% endif %}
+</p>
+{% endif %}
+
+{% if errors %}
+<p style="color:red">No students were enrolled. Fix the following lines:</p>
+<ul style="color:red">
+  {% for e in errors %}<li>{{e}}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<p>One student id per line:</p>
+<form action="/exams/{{exam.id}}/enroll" method="post">
+  <textarea name="studentIds" rows="12" cols="20">{{studentIdsText}}</textarea>
+  <p><input type="submit"></p>
+</form>
+
+<h4>Enrolled students ({{exam.enrollments | length}})</h4>
+{% if exam.enrollments %}
+<ul>
+  {% for en in exam.enrollments %}<li>{{en.studentId}}</li>{% endfor %}
+</ul>
+{% else %}
+<p>No students enrolled.</p>
+{% endif %}
+{% endblock %}

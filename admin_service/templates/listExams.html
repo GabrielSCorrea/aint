@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Scheduled Exams</h3>
+
+{% if exams %}
+<table border="1">
+  <tr><th>Id</th><th>Date</th><th>Course</th><th>Enrolled</th><th></th></tr>
+  {% for e in exams %}
+  <tr>
+    <td>{{e.id}}</td>
+    <td>{{e.date}}</td>
+    <td>{{e.course}}</td>
+    <td>{{e.enrollments | length}}</td>
+    <td><a href="/exams/{{e.id}}/enroll">Enroll students</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No exams scheduled.</p>
+{% endif %}
+{% endblock %}
