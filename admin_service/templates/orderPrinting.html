@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Print Resolution Sheets: {{exam.course}} ({{exam.date}})</h3>
+
+{% if sheetIds %}
+<p style="color:green">
+  Printed {{sheetIds | length}} sheet(s): {{sheetIds | join(", ")}}.
+  <a href="{{pdfUrl}}">Download PDF</a>
+</p>
+{% endif %}
+
+{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+
+<p>Enrolled students: {{exam.enrollments | length}}</p>
+<form action="/exams/{{exam.id}}/print" method="post">
+  <input type="submit" value="Print">
+</form>
+{% endblock %}

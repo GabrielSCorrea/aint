@@ -1,6 +1,9 @@
+from xmlrpc import client
+
 from flask import abort, redirect, render_template, request
 
 import models
+from settings import PRINTING_SERVICE
 
 
 def parseStudentIds(text):
@@ -70,6 +73,36 @@ def enrollExam(examId):
             newIds=newIds,
             skipped=len(set(studentIds)) - len(newIds),
         )
+
+
+# AD_3 - order the printing of the exam resolution sheets
+def orderPrinting(examId):
+    exam = models.Exam.get(examId)
+    if exam is None:
+        abort(404)
+    if request.method == "GET":
+        return render_template("orderPrinting.html", exam=exam)
+    if not exam.enrollments:
+        return render_template(
+            "orderPrinting.html", exam=exam, error="no students enrolled"
+        )
+    proxy = client.ServerProxy(PRINTING_SERVICE + "/api")
+    try:
+        sheetIds = proxy.printExam(
+            exam.id, exam.date.isoformat(), exam.course, len(exam.enrollments)
+        )
+    except client.Fault as err:
+        error = err.faultString
+    except (client.ProtocolError, OSError):
+        error = "printing service unavailable"
+    else:
+        return render_template(
+            "orderPrinting.html",
+            exam=exam,
+            sheetIds=sheetIds,
+            pdfUrl="%s/exams/%d/pdf" % (PRINTING_SERVICE, exam.id),
+        )
+    return render_template("orderPrinting.html", exam=exam, error=error)
 
 
 # ST_1 - list student enrollments in exams
