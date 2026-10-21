@@ -8,3 +8,5 @@ engine = create_engine("sqlite:///%s" % (DATABASE_FILE), echo=False)
 
 Base = declarative_base()
 session = scoped_session(sessionmaker(bind=engine))
+
+PRINTING_SERVICE = "http://localhost:5003"
