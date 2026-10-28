@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Uploaded Scans</h3>
+
+{% if scans %}
+<table border="1">
+  <tr><th>Id</th><th>Exam Id</th><th>Pages</th><th>Sheets</th><th></th></tr>
+  {% for s in scans %}
+  <tr>
+    <td>{{s.id}}</td>
+    <td>{{s.examId}}</td>
+    <td>{{s.corrections | length}}</td>
+    <td>{{(s.corrections | length) // 4}}</td>
+    <td><a href="/scans/{{s.id}}/pdf">Download PDF</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No scans uploaded.</p>
+{% endif %}
+{% endblock %}

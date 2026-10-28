@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>{{title}}</h3>
+
+{% if corrections %}
+<table border="1">
+  <tr><th>Exam Id</th><th>Question</th><th>Professor Id</th><th>Grade</th><th></th></tr>
+  {% for c, professorId in corrections %}
+  <tr>
+    <td>{{c.examPdf.examId}}</td>
+    <td>{{c.questionNumber}}</td>
+    <td>{% if professorId %}{{professorId}}{% else %}unassigned{% endif %}</td>
+    <td>{% if c.evaluated %}{{c.grade}}{% endif %}</td>
+    <td>
+      <a href="/corrections/{{c.id}}">{% if c.evaluated %}Change grade{% else %}Correct{% endif %}</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No answers.</p>
+{% endif %}
+{% endblock %}

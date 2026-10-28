@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Exam {{correction.examPdf.examId}} - Question {{correction.questionNumber}}</h3>
+
+{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+
+<form action="/corrections/{{correction.id}}" method="post">
+  <p>
+    Grade (0-{{maxGrade}}):
+    <input type="number" name="grade" step="0.1" min="0" max="{{maxGrade}}"
+      value="{% if gradeText is defined %}{{gradeText}}{% elif correction.evaluated %}{{correction.grade}}{% endif %}">
+    <input type="submit">
+  </p>
+</form>
+
+<img src="/corrections/{{correction.id}}/image" width="600" alt="answer to question {{correction.questionNumber}}">
+{% endblock %}
