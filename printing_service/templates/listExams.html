@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Exams with Resolution Sheets</h3>
+
+{% if exams %}
+<table border="1">
+  <tr><th>Exam Id</th><th>Date</th><th>Course</th><th>Sheets</th><th></th></tr>
+  {% for examId, date, course, sheetsNum in exams %}
+  <tr>
+    <td>{{examId}}</td>
+    <td>{{date}}</td>
+    <td>{{course}}</td>
+    <td>{{sheetsNum}}</td>
+    <td><a href="/exams/{{examId}}/pdf">Download PDF</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No resolution sheets printed.</p>
+{% endif %}
+{% endblock %}

@@ -12,7 +12,10 @@
     <td>{{e.date}}</td>
     <td>{{e.course}}</td>
     <td>{{e.enrollments | length}}</td>
-    <td><a href="/exams/{{e.id}}/enroll">Enroll students</a></td>
+    <td>
+      <a href="/exams/{{e.id}}/enroll">Enroll students</a>
+      <a href="/exams/{{e.id}}/print">Print sheets</a>
+    </td>
   </tr>
   {% endfor %}
 </table>

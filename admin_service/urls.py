@@ -12,4 +12,9 @@ def registerUrls(app):
         view_func=views.enrollExam,
         methods=["GET", "POST"],
     )
+    app.add_url_rule(
+        "/exams/<int:examId>/print",
+        view_func=views.orderPrinting,
+        methods=["GET", "POST"],
+    )
     app.add_url_rule("/enrollments", view_func=views.listEnrollments)
