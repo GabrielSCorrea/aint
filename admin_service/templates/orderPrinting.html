@@ -6,11 +6,12 @@
 {% if sheetIds %}
 <p style="color:green">
   Printed {{sheetIds | length}} sheet(s): {{sheetIds | join(", ")}}.
-  <a href="{{pdfUrl}}">Download PDF</a>
 </p>
 {% endif %}
 
 {% if error %}<p style="color:red">{{error}}</p>{% endif %}
+
+{% if pdfUrl %}<p><a href="{{pdfUrl}}">Download PDF</a></p>{% endif %}
 
 <p>Enrolled students: {{exam.enrollments | length}}</p>
 <form action="/exams/{{exam.id}}/print" method="post">

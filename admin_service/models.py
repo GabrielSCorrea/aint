@@ -17,22 +17,21 @@ class Exam(Base):
     )
 
     def __repr__(self):
-        return "<Exam(id=%d, date='%s', course='%s')>" % (
-            self.id,
-            self.date,
-            self.course,
-        )
+        return f"<Exam(id={self.id}, date='{self.date}', course='{self.course}')>"
 
     @staticmethod
     def validate(date, course):
         if not date:
             return "date is empty"
+
         try:
             datetime.date.fromisoformat(date)
         except ValueError:
-            return "invalid date '%s' (expected YYYY-MM-DD)" % date
+            return f"invalid date '{date}' (expected YYYY-MM-DD)"
+
         if not course:
             return "course is empty"
+
         return None
 
     @classmethod
@@ -46,8 +45,10 @@ class Exam(Base):
     @classmethod
     def create(cls, date, course):
         exam = cls(date=datetime.date.fromisoformat(date), course=course)
+
         session.add(exam)
         session.commit()
+
         return exam
 
 
@@ -59,10 +60,7 @@ class Enrollment(Base):
     exam = relationship("Exam", back_populates="enrollments")
 
     def __repr__(self):
-        return "<Enrollment(examId=%d, studentId=%d)>" % (
-            self.examId,
-            self.studentId,
-        )
+        return f"<Enrollment(examId={self.examId}, studentId={self.studentId})>"
 
     @classmethod
     def all(cls):
@@ -70,15 +68,21 @@ class Enrollment(Base):
 
     @classmethod
     def bulkCreate(cls, examId, studentIds):
-        existing = session.query(cls).filter(cls.examId == examId)
-        enrolled = {e.studentId for e in existing}
         newIds = []
+        existing = session.query(cls).filter(cls.examId == examId)
+
+        enrolled = []
+        for enrollment in existing:
+            enrolled.append(enrollment.studentId)
+
         for studentId in studentIds:
             if studentId not in enrolled:
                 session.add(cls(examId=examId, studentId=studentId))
-                enrolled.add(studentId)
+                enrolled.append(studentId)
                 newIds.append(studentId)
+
         session.commit()
+
         return newIds
 
 

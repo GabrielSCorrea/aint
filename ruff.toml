@@ -5,3 +5,5 @@ src = ["user_service", "admin_service", "printing_service", "correction_service"
 [lint]
 # E/W: pycodestyle, F: pyflakes, I: import sorting, B: common bug patterns
 select = ["E", "W", "F", "I", "B"]
+# line length is left to the formatter, which never splits long strings
+ignore = ["E501"]

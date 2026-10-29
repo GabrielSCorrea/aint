@@ -7,39 +7,23 @@ import utils
 from settings import MAX_GRADE, QUESTIONS
 
 
-def parseInt(text):
-    try:
-        return int(text)
-    except ValueError:
-        return None
-
-
-def parseGrade(text):
-    try:
-        return float(text)
-    except ValueError:
-        return None
-
-
 def index():
     return redirect("/corrections")
 
 
-# AD_4 - list professor assignments
 def listAssignments():
     return render_template(
         "listAssignments.html", assignments=models.ProfessorAssignment.all()
     )
 
 
-# AD_4 - assign a professor to the correction of an exam question
 def assignProfessor():
     if request.method == "GET":
         return render_template("assignProfessor.html", questions=QUESTIONS)
     else:
-        examId = parseInt(request.form["examId"])
-        questionNumber = parseInt(request.form["questionNumber"])
-        professorId = parseInt(request.form["professorId"])
+        examId = utils.parseInt(request.form["examId"])
+        questionNumber = utils.parseInt(request.form["questionNumber"])
+        professorId = utils.parseInt(request.form["professorId"])
         error = models.ProfessorAssignment.validate(examId, questionNumber, professorId)
         if error:
             return render_template(
@@ -54,18 +38,16 @@ def assignProfessor():
         return redirect("/assignments")
 
 
-# AD_5 - list uploaded scans
 def listScans():
     return render_template("listScans.html", scans=models.ExamCorrectionPdf.all())
 
 
-# AD_5 - upload the scan of an exam's resolutions
 def uploadScan():
     if request.method == "GET":
         return render_template("uploadScan.html")
     else:
         examIdText = request.form["examId"]
-        examId = parseInt(examIdText)
+        examId = utils.parseInt(examIdText)
         file = request.files.get("pdf")
         error = models.ExamCorrectionPdf.validate(examId)
         if error is None and (not file or not file.filename):
@@ -77,11 +59,12 @@ def uploadScan():
             except ValueError as err:
                 error = str(err)
         if error is None:
-            uploaded = models.QuestionCorrection.uploadedSheets(
-                {sheetId for sheetId, _, _ in pages}
-            )
+            sheetIds = []
+            for sheetId, _, _ in pages:
+                sheetIds.append(sheetId)
+            uploaded = models.QuestionCorrection.uploadedSheets(sheetIds)
             if uploaded:
-                error = "sheet(s) already uploaded: %s" % ", ".join(map(str, uploaded))
+                error = f"sheet(s) already uploaded: {', '.join(map(str, uploaded))}"
         if error:
             return render_template("uploadScan.html", error=error, examId=examIdText)
         models.ExamCorrectionPdf.create(examId, pdf, pages)
@@ -95,11 +78,10 @@ def downloadScan(examPdfId):
     return send_file(
         BytesIO(examPdf.pdf),
         mimetype="application/pdf",
-        download_name="scan-%d.pdf" % examPdf.id,
+        download_name=f"scan-{examPdf.id}.pdf",
     )
 
 
-# PR_1 - list resolutions waiting for correction (of every professor in part 1)
 def listPending():
     return render_template(
         "listCorrections.html",
@@ -108,7 +90,6 @@ def listPending():
     )
 
 
-# PR_3 - list corrected answers
 def listCorrected():
     return render_template(
         "listCorrections.html",
@@ -117,7 +98,6 @@ def listCorrected():
     )
 
 
-# PR_2 - correct an answer
 def correctAnswer(correctionId):
     correction = models.QuestionCorrection.get(correctionId)
     if correction is None:
@@ -128,7 +108,7 @@ def correctAnswer(correctionId):
         )
     else:
         gradeText = request.form["grade"]
-        grade = parseGrade(gradeText)
+        grade = utils.parseGrade(gradeText)
         error = models.QuestionCorrection.validateGrade(grade)
         if error:
             return render_template(
@@ -149,7 +129,6 @@ def correctionImage(correctionId):
     return send_file(BytesIO(correction.image), mimetype="image/png")
 
 
-# ST_3 - list resolution sheets and their grades
 def listResolutions():
     return render_template(
         "listResolutions.html",
@@ -158,14 +137,16 @@ def listResolutions():
     )
 
 
-# ST_3 - see a resolution's scans and corrections
 def showResolution(sheetId):
     corrections = models.QuestionCorrection.forSheet(sheetId)
     if not corrections:
         abort(404)
-    total = None
-    if all(c.evaluated for c in corrections):
-        total = sum(c.grade for c in corrections)
+    total = 0
+    for correction in corrections:
+        if not correction.evaluated:
+            total = None
+            break
+        total += correction.grade
     return render_template(
         "showResolution.html", sheetId=sheetId, corrections=corrections, total=total
     )

@@ -16,27 +16,27 @@ class ResolutionSheet(Base):
     pdf = deferred(Column(LargeBinary, nullable=False))
 
     def __repr__(self):
-        return "<ResolutionSheet(id=%d, examId=%d, date='%s', course='%s')>" % (
-            self.id,
-            self.examId,
-            self.date,
-            self.course,
-        )
+        return f"<ResolutionSheet(id={self.id}, examId={self.examId}, date='{self.date}', course='{self.course}')>"
 
     @staticmethod
     def validate(examId, date, course, sheetsNum):
-        if not isinstance(examId, int) or examId < 1:
-            return "invalid exam id '%s'" % examId
-        if not isinstance(date, str) or not date:
-            return "date is empty"
+        if type(examId) is not int or examId < 1:
+            return f"invalid exam id '{examId}'"
+
+        if type(date) is not str or not date:
+            return "date is wrong or empty"
+
         try:
             datetime.date.fromisoformat(date)
         except ValueError:
-            return "invalid date '%s' (expected YYYY-MM-DD)" % date
-        if not isinstance(course, str) or not course.strip():
-            return "course is empty"
-        if not isinstance(sheetsNum, int) or sheetsNum < 1:
-            return "invalid number of sheets '%s'" % sheetsNum
+            return f"invalid date '{date}' (expected YYYY-MM-DD)"
+
+        if type(course) is not str or not course.strip():
+            return "course is wrong or empty"
+
+        if type(sheetsNum) is not int or sheetsNum < 1:
+            return f"invalid number of sheets '{sheetsNum}'"
+
         return None
 
     @classmethod
@@ -65,17 +65,23 @@ class ResolutionSheet(Base):
     @classmethod
     def bulkCreate(cls, examId, date, course, sheetsNum):
         date = datetime.date.fromisoformat(date)
-        title = "%s - %s" % (course, date)
-        sheets = [
-            cls(examId=examId, date=date, course=course, pdf=b"")
-            for _ in range(sheetsNum)
-        ]
+        title = f"{course} - {date}"
+
+        sheets = []
+        for _ in range(sheetsNum):
+            sheets.append(cls(examId=examId, date=date, course=course, pdf=b""))
+
         session.add_all(sheets)
         session.flush()
+
+        sheetIds = []
         for sheet in sheets:
             sheet.pdf = utils.makeSheetPdf(sheet.id, title)
+            sheetIds.append(sheet.id)
+
         session.commit()
-        return [sheet.id for sheet in sheets]
+
+        return sheetIds
 
 
 Base.metadata.create_all(engine)

@@ -12,7 +12,9 @@ class Role(IntEnum):
     INVIGILATOR = 3
 
 
-ROLES = [role.name.lower() for role in Role]
+ROLES = []
+for role in Role:
+    ROLES.append(role.name.lower())
 
 
 class User(Base):
@@ -23,11 +25,7 @@ class User(Base):
     role = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<User(id=%d, name='%s', role='%s')>" % (
-            self.id,
-            self.name,
-            self.roleName,
-        )
+        return f"<User(id={self.id}, name='{self.name}', role='{self.roleName}')>"
 
     @property
     def roleName(self):
@@ -40,7 +38,8 @@ class User(Base):
         if not password:
             return "password is empty"
         if role not in ROLES:
-            return "invalid role '%s' (must be one of: %s)" % (role, ", ".join(ROLES))
+            return f"invalid role '{role}' (must be one of: {', '.join(ROLES)})"
+
         return None
 
     @classmethod
@@ -50,8 +49,10 @@ class User(Base):
     @classmethod
     def create(cls, name, password, role):
         user = cls(name=name, password=password, role=Role[role.upper()])
+
         session.add(user)
         session.commit()
+
         return user
 
     @classmethod

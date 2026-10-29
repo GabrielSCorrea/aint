@@ -15,25 +15,19 @@ from settings import MAX_GRADE, QUESTIONS, Base, engine, session
 
 class ProfessorAssignment(Base):
     __tablename__ = "professor_assignments"
-    # the (examId, questionNumber) pair is the primary key:
-    # each question of an exam is corrected by a single professor
     examId = Column(Integer, primary_key=True)
     questionNumber = Column(Integer, primary_key=True)
     professorId = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<ProfessorAssignment(examId=%d, questionNumber=%d, professorId=%d)>" % (
-            self.examId,
-            self.questionNumber,
-            self.professorId,
-        )
+        return f"<ProfessorAssignment(examId={self.examId}, questionNumber={self.questionNumber}, professorId={self.professorId})>"
 
     @staticmethod
     def validate(examId, questionNumber, professorId):
         if examId is None or examId < 1:
             return "invalid exam id"
         if questionNumber not in range(1, QUESTIONS + 1):
-            return "question number must be between 1 and %d" % QUESTIONS
+            return f"question number must be between 1 and {QUESTIONS}"
         if professorId is None or professorId < 1:
             return "invalid professor id"
         return None
@@ -44,7 +38,6 @@ class ProfessorAssignment(Base):
 
     @classmethod
     def assign(cls, examId, questionNumber, professorId):
-        # merge inserts the assignment, or replaces the professor if it exists
         assignment = session.merge(
             cls(examId=examId, questionNumber=questionNumber, professorId=professorId)
         )
@@ -65,7 +58,7 @@ class ExamCorrectionPdf(Base):
     )
 
     def __repr__(self):
-        return "<ExamCorrectionPdf(id=%d, examId=%d)>" % (self.id, self.examId)
+        return f"<ExamCorrectionPdf(id={self.id}, examId={self.examId})>"
 
     @staticmethod
     def validate(examId):
@@ -83,7 +76,6 @@ class ExamCorrectionPdf(Base):
 
     @classmethod
     def create(cls, examId, pdf, pages):
-        # pages: (sheetId, questionNumber, image) tuples from utils.splitScan
         examPdf = cls(examId=examId, pdf=pdf)
         for sheetId, questionNumber, image in pages:
             examPdf.corrections.append(
@@ -100,10 +92,8 @@ class QuestionCorrection(Base):
     __tablename__ = "question_corrections"
     id = Column(Integer, primary_key=True)
     examPdfId = Column(Integer, ForeignKey("exam_correction_pdfs.id"), nullable=False)
-    # read from the page's QR code: identifies the resolution sheet, not the student
     sheetId = Column(Integer, nullable=False)
     questionNumber = Column(Integer, nullable=False)
-    # PNG of the page with its QR codes covered
     image = deferred(Column(LargeBinary, nullable=False))
     evaluated = Column(Boolean, nullable=False, default=False)
     grade = Column(Float)
@@ -111,17 +101,12 @@ class QuestionCorrection(Base):
     examPdf = relationship("ExamCorrectionPdf", back_populates="corrections")
 
     def __repr__(self):
-        return "<QuestionCorrection(id=%d, sheetId=%d, questionNumber=%d)>" % (
-            self.id,
-            self.sheetId,
-            self.questionNumber,
-        )
+        return f"<QuestionCorrection(id={self.id}, sheetId={self.sheetId}, questionNumber={self.questionNumber})>"
 
     @staticmethod
     def validateGrade(grade):
-        # "not a <= g <= b" also rejects nan and inf
         if grade is None or not 0 <= grade <= MAX_GRADE:
-            return "grade must be a number between 0 and %d" % MAX_GRADE
+            return f"grade must be a number between 0 and {MAX_GRADE}"
         return None
 
     @classmethod
@@ -130,7 +115,6 @@ class QuestionCorrection(Base):
 
     @classmethod
     def listWithProfessor(cls, evaluated):
-        # (correction, professorId) pairs, professorId is None if unassigned
         return (
             session.query(cls, ProfessorAssignment.professorId)
             .join(cls.examPdf)
@@ -149,12 +133,13 @@ class QuestionCorrection(Base):
     @classmethod
     def uploadedSheets(cls, sheetIds):
         rows = session.query(cls.sheetId).filter(cls.sheetId.in_(sheetIds)).distinct()
-        return sorted(row.sheetId for row in rows)
+        uploaded = []
+        for row in rows:
+            uploaded.append(row.sheetId)
+        return sorted(uploaded)
 
     @classmethod
     def sheets(cls):
-        # one row per sheet: (sheetId, examId, corrected questions, total grade)
-        # count(grade) only counts the graded questions
         return (
             session.query(
                 cls.sheetId,
