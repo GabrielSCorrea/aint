@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Resolution Sheet {{sheetId}} (Exam {{corrections[0].examPdf.examId}})</h3>
+
+<p>Grade: {% if total is not none %}{{total}}{% else %}not fully corrected yet{% endif %}</p>
+
+{% for c in corrections %}
+<h4>Question {{c.questionNumber}}: {% if c.evaluated %}{{c.grade}}{% else %}not corrected yet{% endif %}</h4>
+<img src="/corrections/{{c.id}}/image" width="600" alt="answer to question {{c.questionNumber}}">
+{% endfor %}
+{% endblock %}

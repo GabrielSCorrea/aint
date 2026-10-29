@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Professor Assignments</h3>
+
+{% if assignments %}
+<table border="1">
+  <tr><th>Exam Id</th><th>Question</th><th>Professor Id</th></tr>
+  {% for a in assignments %}
+  <tr>
+    <td>{{a.examId}}</td>
+    <td>{{a.questionNumber}}</td>
+    <td>{{a.professorId}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No professors assigned.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3>Exam Resolutions</h3>
+
+{% if sheets %}
+<table border="1">
+  <tr><th>Sheet Id</th><th>Exam Id</th><th>Corrected</th><th>Grade</th><th></th></tr>
+  {% for sheetId, examId, corrected, total in sheets %}
+  <tr>
+    <td>{{sheetId}}</td>
+    <td>{{examId}}</td>
+    <td>{{corrected}}/{{questions}}</td>
+    <td>{% if corrected == questions %}{{total}}{% else %}-{% endif %}</td>
+    <td><a href="/resolutions/{{sheetId}}">View</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No resolutions uploaded.</p>
+{% endif %}
+{% endblock %}
