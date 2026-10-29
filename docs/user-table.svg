@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="345.0" viewBox="0 0 820 345.0" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+<rect width="820" height="345.0" fill="#ffffff"/>
+<g stroke="#4a5562" stroke-width="1.2" fill="#e8edf3"><path d="M40,23 v13 a8,3 0 0 0 16,0 v-13"/><ellipse cx="48" cy="23" rx="8" ry="3"/></g><text x="66" y="36" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">users.sqlite</text>
+<rect x="40" y="56" width="500" height="218" rx="8" fill="#ffffff" stroke="#c3cbd5" stroke-width="1.25"/>
+<path d="M40,102 V64 Q40,56 48,56 H532 Q540,56 540,64 V102 Z" fill="#1e3a5f"/>
+<text x="56" y="86" font-size="17" fill="#ffffff" font-weight="bold" font-family="Menlo, Consolas, monospace">users</text>
+<text x="524" y="85" font-size="13" fill="#b8c6d8" text-anchor="end">class User</text>
+<rect x="40.6" y="102" width="498.8" height="28" fill="#f4f6f9"/>
+<text x="132" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">COLUMN</text>
+<text x="276" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">TYPE</text>
+<text x="380" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">CONSTRAINTS</text>
+<line x1="41" y1="130" x2="539" y2="130" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="54" y="139" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="69" y="152" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<text x="132" y="153" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">id</text>
+<text x="276" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<line x1="41" y1="166" x2="539" y2="166" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">name</text>
+<text x="276" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">String</text>
+<text x="380" y="189" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="41" y1="202" x2="539" y2="202" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="225" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">password</text>
+<text x="276" y="225" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">String</text>
+<text x="380" y="225" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="41" y1="238" x2="539" y2="238" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="261" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">role</text>
+<text x="276" y="261" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="261" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="540" y1="256.0" x2="600" y2="256.0" stroke="#7a8796" stroke-width="1.4" stroke-dasharray="5 4"/>
+<rect x="600" y="198.0" width="180" height="117" rx="6" fill="#f8fafc" stroke="#c3cbd5" stroke-width="1.25"/>
+<text x="616" y="222.0" font-size="13" fill="#2b3440" font-weight="bold">Role (IntEnum)</text>
+<text x="616" y="244.0" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">0</text>
+<text x="638" y="244.0" font-size="12.5" fill="#2b3440" font-family="Menlo, Consolas, monospace">administrator</text>
+<text x="616" y="263.0" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">1</text>
+<text x="638" y="263.0" font-size="12.5" fill="#2b3440" font-family="Menlo, Consolas, monospace">professor</text>
+<text x="616" y="282.0" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">2</text>
+<text x="638" y="282.0" font-size="12.5" fill="#2b3440" font-family="Menlo, Consolas, monospace">student</text>
+<text x="616" y="301.0" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">3</text>
+<text x="638" y="301.0" font-size="12.5" fill="#2b3440" font-family="Menlo, Consolas, monospace">invigilator</text>
+</svg>

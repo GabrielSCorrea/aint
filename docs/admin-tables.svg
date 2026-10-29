@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="322" viewBox="0 0 1220 322" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+<rect width="1220" height="322" fill="#ffffff"/>
+<g stroke="#4a5562" stroke-width="1.2" fill="#e8edf3"><path d="M40,23 v13 a8,3 0 0 0 16,0 v-13"/><ellipse cx="48" cy="23" rx="8" ry="3"/></g><text x="66" y="36" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">admin.sqlite</text>
+<rect x="40" y="56" width="500" height="182" rx="8" fill="#ffffff" stroke="#c3cbd5" stroke-width="1.25"/>
+<path d="M40,102 V64 Q40,56 48,56 H532 Q540,56 540,64 V102 Z" fill="#1e3a5f"/>
+<text x="56" y="86" font-size="17" fill="#ffffff" font-weight="bold" font-family="Menlo, Consolas, monospace">exams</text>
+<text x="524" y="85" font-size="13" fill="#b8c6d8" text-anchor="end">class Exam</text>
+<rect x="40.6" y="102" width="498.8" height="28" fill="#f4f6f9"/>
+<text x="132" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">COLUMN</text>
+<text x="276" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">TYPE</text>
+<text x="380" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">CONSTRAINTS</text>
+<line x1="41" y1="130" x2="539" y2="130" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="54" y="139" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="69" y="152" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<text x="132" y="153" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">id</text>
+<text x="276" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<line x1="41" y1="166" x2="539" y2="166" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">date</text>
+<text x="276" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Date</text>
+<text x="380" y="189" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="41" y1="202" x2="539" y2="202" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="225" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">course</text>
+<text x="276" y="225" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">String</text>
+<text x="380" y="225" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<rect x="680" y="56" width="500" height="146" rx="8" fill="#ffffff" stroke="#c3cbd5" stroke-width="1.25"/>
+<path d="M680,102 V64 Q680,56 688,56 H1172 Q1180,56 1180,64 V102 Z" fill="#1e3a5f"/>
+<text x="696" y="86" font-size="17" fill="#ffffff" font-weight="bold" font-family="Menlo, Consolas, monospace">enrollments</text>
+<text x="1164" y="85" font-size="13" fill="#b8c6d8" text-anchor="end">class Enrollment</text>
+<rect x="680.6" y="102" width="498.8" height="28" fill="#f4f6f9"/>
+<text x="772" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">COLUMN</text>
+<text x="916" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">TYPE</text>
+<text x="1020" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">CONSTRAINTS</text>
+<line x1="681" y1="130" x2="1179" y2="130" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="694" y="139" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="709" y="152" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<rect x="730" y="139" width="30" height="18" rx="9" fill="#ffffff" stroke="#2563a8" stroke-width="1.2"/>
+<text x="745" y="152" font-size="10.5" fill="#2563a8" font-weight="bold" text-anchor="middle">FK</text>
+<text x="772" y="153" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">examId</text>
+<text x="916" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="1020" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<line x1="681" y1="166" x2="1179" y2="166" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="694" y="175" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="709" y="188" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<text x="772" y="189" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">studentId</text>
+<text x="916" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="1020" y="189" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<polyline points="540,148.0 680,148.0" fill="none" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="549" y1="141.0" x2="549" y2="155.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="554" y1="141.0" x2="554" y2="155.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="664" y1="148.0" x2="680" y2="140.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="664" y1="148.0" x2="680" y2="148.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="664" y1="148.0" x2="680" y2="156.0" stroke="#7a8796" stroke-width="1.4"/>
+<circle cx="657" cy="148.0" r="4" fill="#ffffff" stroke="#7a8796" stroke-width="1.4"/>
+<text x="552" y="136.0" font-size="11.5" fill="#5d6875" font-weight="bold" text-anchor="middle">1</text>
+<text x="660" y="136.0" font-size="11.5" fill="#5d6875" font-weight="bold" text-anchor="middle">0..N</text>
+<line x1="930" y1="202" x2="930" y2="232" stroke="#7a8796" stroke-width="1.4" stroke-dasharray="5 4"/>
+<rect x="680" y="232" width="500" height="60" rx="6" fill="#f8fafc" stroke="#c3cbd5" stroke-width="1.25"/>
+<text x="696" y="256" font-size="13" fill="#2b3440" font-weight="bold">Composite primary key (examId, studentId)</text>
+<text x="696" y="278" font-size="13" fill="#2b3440">a student is enrolled in each exam at most once</text>
+</svg>

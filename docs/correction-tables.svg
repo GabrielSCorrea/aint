@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="602" viewBox="0 0 1220 602" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+<rect width="1220" height="602" fill="#ffffff"/>
+<g stroke="#4a5562" stroke-width="1.2" fill="#e8edf3"><path d="M40,23 v13 a8,3 0 0 0 16,0 v-13"/><ellipse cx="48" cy="23" rx="8" ry="3"/></g><text x="66" y="36" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">corrections.sqlite</text>
+<rect x="40" y="56" width="500" height="182" rx="8" fill="#ffffff" stroke="#c3cbd5" stroke-width="1.25"/>
+<path d="M40,102 V64 Q40,56 48,56 H532 Q540,56 540,64 V102 Z" fill="#1e3a5f"/>
+<text x="56" y="86" font-size="17" fill="#ffffff" font-weight="bold" font-family="Menlo, Consolas, monospace">exam_correction_pdfs</text>
+<text x="524" y="85" font-size="13" fill="#b8c6d8" text-anchor="end">class ExamCorrectionPdf</text>
+<rect x="40.6" y="102" width="498.8" height="28" fill="#f4f6f9"/>
+<text x="132" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">COLUMN</text>
+<text x="276" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">TYPE</text>
+<text x="380" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">CONSTRAINTS</text>
+<line x1="41" y1="130" x2="539" y2="130" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="54" y="139" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="69" y="152" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<text x="132" y="153" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">id</text>
+<text x="276" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<line x1="41" y1="166" x2="539" y2="166" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">examId</text>
+<text x="276" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="189" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="41" y1="202" x2="539" y2="202" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="225" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">pdf</text>
+<text x="276" y="225" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">LargeBinary</text>
+<text x="380" y="225" font-size="12.5" fill="#5d6875">NOT NULL, deferred</text>
+<rect x="40" y="300" width="500" height="182" rx="8" fill="#ffffff" stroke="#c3cbd5" stroke-width="1.25"/>
+<path d="M40,346 V308 Q40,300 48,300 H532 Q540,300 540,308 V346 Z" fill="#1e3a5f"/>
+<text x="56" y="330" font-size="17" fill="#ffffff" font-weight="bold" font-family="Menlo, Consolas, monospace">professor_assignments</text>
+<text x="524" y="329" font-size="13" fill="#b8c6d8" text-anchor="end">class ProfessorAssignment</text>
+<rect x="40.6" y="346" width="498.8" height="28" fill="#f4f6f9"/>
+<text x="132" y="365" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">COLUMN</text>
+<text x="276" y="365" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">TYPE</text>
+<text x="380" y="365" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">CONSTRAINTS</text>
+<line x1="41" y1="374" x2="539" y2="374" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="54" y="383" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="69" y="396" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<text x="132" y="397" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">examId</text>
+<text x="276" y="397" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="397" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<line x1="41" y1="410" x2="539" y2="410" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="54" y="419" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="69" y="432" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<text x="132" y="433" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">questionNumber</text>
+<text x="276" y="433" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="433" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<line x1="41" y1="446" x2="539" y2="446" stroke="#e3e7ec" stroke-width="1"/>
+<text x="132" y="469" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">professorId</text>
+<text x="276" y="469" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="380" y="469" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="290" y1="482" x2="290" y2="512" stroke="#7a8796" stroke-width="1.4" stroke-dasharray="5 4"/>
+<rect x="40" y="512" width="500" height="60" rx="6" fill="#f8fafc" stroke="#c3cbd5" stroke-width="1.25"/>
+<text x="56" y="536" font-size="13" fill="#2b3440" font-weight="bold">Composite primary key (examId, questionNumber)</text>
+<text x="56" y="558" font-size="13" fill="#2b3440">each question of an exam is corrected by a single professor</text>
+<rect x="680" y="56" width="500" height="326" rx="8" fill="#ffffff" stroke="#c3cbd5" stroke-width="1.25"/>
+<path d="M680,102 V64 Q680,56 688,56 H1172 Q1180,56 1180,64 V102 Z" fill="#1e3a5f"/>
+<text x="696" y="86" font-size="17" fill="#ffffff" font-weight="bold" font-family="Menlo, Consolas, monospace">question_corrections</text>
+<text x="1164" y="85" font-size="13" fill="#b8c6d8" text-anchor="end">class QuestionCorrection</text>
+<rect x="680.6" y="102" width="498.8" height="28" fill="#f4f6f9"/>
+<text x="772" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">COLUMN</text>
+<text x="916" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">TYPE</text>
+<text x="1020" y="121" font-size="11" fill="#5d6875" font-weight="bold" letter-spacing="0.6">CONSTRAINTS</text>
+<line x1="681" y1="130" x2="1179" y2="130" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="694" y="139" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
+<text x="709" y="152" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
+<text x="772" y="153" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">id</text>
+<text x="916" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="1020" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
+<line x1="681" y1="166" x2="1179" y2="166" stroke="#e3e7ec" stroke-width="1"/>
+<rect x="694" y="175" width="30" height="18" rx="9" fill="#ffffff" stroke="#2563a8" stroke-width="1.2"/>
+<text x="709" y="188" font-size="10.5" fill="#2563a8" font-weight="bold" text-anchor="middle">FK</text>
+<text x="772" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">examPdfId</text>
+<text x="916" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="1020" y="189" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="681" y1="202" x2="1179" y2="202" stroke="#e3e7ec" stroke-width="1"/>
+<text x="772" y="225" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">sheetId</text>
+<text x="916" y="225" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="1020" y="225" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="681" y1="238" x2="1179" y2="238" stroke="#e3e7ec" stroke-width="1"/>
+<text x="772" y="261" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">questionNumber</text>
+<text x="916" y="261" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
+<text x="1020" y="261" font-size="12.5" fill="#5d6875">NOT NULL</text>
+<line x1="681" y1="274" x2="1179" y2="274" stroke="#e3e7ec" stroke-width="1"/>
+<text x="772" y="297" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">image</text>
+<text x="916" y="297" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">LargeBinary</text>
+<text x="1020" y="297" font-size="12.5" fill="#5d6875">NOT NULL, deferred</text>
+<line x1="681" y1="310" x2="1179" y2="310" stroke="#e3e7ec" stroke-width="1"/>
+<text x="772" y="333" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">evaluated</text>
+<text x="916" y="333" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Boolean</text>
+<text x="1020" y="333" font-size="12.5" fill="#5d6875">NOT NULL, default false</text>
+<line x1="681" y1="346" x2="1179" y2="346" stroke="#e3e7ec" stroke-width="1"/>
+<text x="772" y="369" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">grade</text>
+<text x="916" y="369" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Float</text>
+<text x="1020" y="369" font-size="12.5" fill="#5d6875">NULL until graded</text>
+<polyline points="540,148.0 610.0,148.0 610.0,184.0 680,184.0" fill="none" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="549" y1="141.0" x2="549" y2="155.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="554" y1="141.0" x2="554" y2="155.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="664" y1="184.0" x2="680" y2="176.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="664" y1="184.0" x2="680" y2="184.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="664" y1="184.0" x2="680" y2="192.0" stroke="#7a8796" stroke-width="1.4"/>
+<line x1="659" y1="177.0" x2="659" y2="191.0" stroke="#7a8796" stroke-width="1.4"/>
+<text x="552" y="136.0" font-size="11.5" fill="#5d6875" font-weight="bold" text-anchor="middle">1</text>
+<text x="660" y="172.0" font-size="11.5" fill="#5d6875" font-weight="bold" text-anchor="middle">1..N</text>
+<line x1="930" y1="382" x2="930" y2="412" stroke="#7a8796" stroke-width="1.4" stroke-dasharray="5 4"/>
+<rect x="680" y="412" width="500" height="98" rx="6" fill="#f8fafc" stroke="#c3cbd5" stroke-width="1.25"/>
+<text x="696" y="436" font-size="13" fill="#2b3440" font-weight="bold">Filled when a scan is uploaded (AD_5)</text>
+<text x="696" y="458" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">sheetId</text>
+<text x="822" y="458" font-size="13" fill="#2b3440">read from the page&#x27;s QR code</text>
+<text x="696" y="477" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">questionNumber</text>
+<text x="822" y="477" font-size="13" fill="#2b3440">position of the page in the sheet</text>
+<text x="696" y="496" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">image</text>
+<text x="822" y="496" font-size="13" fill="#2b3440">PNG of the page with the QR codes covered</text>
+</svg>
