@@ -26,10 +26,13 @@ class ProfessorAssignment(Base):
     def validate(examId, questionNumber, professorId):
         if examId is None or examId < 1:
             return "invalid exam id"
+
         if questionNumber not in range(1, QUESTIONS + 1):
             return f"question number must be between 1 and {QUESTIONS}"
+
         if professorId is None or professorId < 1:
             return "invalid professor id"
+
         return None
 
     @classmethod
@@ -37,11 +40,18 @@ class ProfessorAssignment(Base):
         return session.query(cls).order_by(cls.examId, cls.questionNumber).all()
 
     @classmethod
+    def get(cls, examId, questionNumber):
+        return session.get(cls, (examId, questionNumber))
+
+    @classmethod
     def assign(cls, examId, questionNumber, professorId):
-        assignment = session.merge(
-            cls(examId=examId, questionNumber=questionNumber, professorId=professorId)
+        assignment = cls(
+            examId=examId, questionNumber=questionNumber, professorId=professorId
         )
+
+        session.add(assignment)
         session.commit()
+
         return assignment
 
 
@@ -64,6 +74,7 @@ class ExamCorrectionPdf(Base):
     def validate(examId):
         if examId is None or examId < 1:
             return "invalid exam id"
+
         return None
 
     @classmethod
@@ -83,8 +94,10 @@ class ExamCorrectionPdf(Base):
                     sheetId=sheetId, questionNumber=questionNumber, image=image
                 )
             )
+
         session.add(examPdf)
         session.commit()
+
         return examPdf
 
 
@@ -107,6 +120,7 @@ class QuestionCorrection(Base):
     def validateGrade(grade):
         if grade is None or not 0 <= grade <= MAX_GRADE:
             return f"grade must be a number between 0 and {MAX_GRADE}"
+
         return None
 
     @classmethod
@@ -133,9 +147,11 @@ class QuestionCorrection(Base):
     @classmethod
     def uploadedSheets(cls, sheetIds):
         rows = session.query(cls.sheetId).filter(cls.sheetId.in_(sheetIds)).distinct()
+
         uploaded = []
         for row in rows:
             uploaded.append(row.sheetId)
+
         return sorted(uploaded)
 
     @classmethod
@@ -165,6 +181,7 @@ class QuestionCorrection(Base):
     def correct(self, grade):
         self.grade = grade
         self.evaluated = True
+
         session.commit()
 
 
