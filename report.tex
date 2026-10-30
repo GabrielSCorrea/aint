@@ -1,0 +1,487 @@
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}
+\IEEEoverridecommandlockouts
+\overrideIEEEmargins
+\title{\LARGE \bf National Exams Correction System}
+\author{
+Master in Electrical and Computer Engineering 26/27 \\
+Eduardo Falvo - 121588 | Gabriel Correa - 117247
+}
+
+\usepackage{tikz}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{changepage}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{ref_manager.bib} %Import the bibliography file
+\definecolor{borderblue}{HTML}{1E3A5F} % Matches attached blue
+% lets long code names break after underscores instead of going past the column
+\renewcommand{\_}{\textunderscore\allowbreak}
+% gives LaTeX some extra space to stretch a line before letting it overflow
+\setlength{\emergencystretch}{2em}
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\section{Introduction}
+In this report, we present a detailed analysis of the proposed National Exams Correction Platform, a web system designed to improve the correction process for national exams. The proposed system aims to make the correction process compartmentalized and decentralized, and therefore more secure. This objective is achieved by dividing the correction flow into multiple independent web services, each one responsible for a part of the process and unaware of the important details handled by the others.
+
+We start this report with an overview of the system itself, highlighting its different servers and interfaces, the role each one performs in the correction process and how they relate to each other. Following this superficial examination, we dive into each one of the services describing them more precisely, listing its pages and endpoints and explaining how it stores and interacts with its data.
+
+\section{System Diagram}
+In this section, we present the overall structure of the system. We show the four services implemented in this first part of the project, the users that access each one of them and how the services communicate with each other.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=01\linewidth]{images/services-diagram.png}
+    \caption{System Services Communication}
+    \label{fig:first}
+\end{figure}
+
+
+\section{User Service}
+Starting with the User Service, it is responsible for storing and managing the information of all system users. Users are registered by a Super User, who holds full platform access and is the only role authorized to create new accounts. The system supports four user roles: administrator, professor, student and exam invigilator. In order to persist the data of the users, we create a For each user, the service stores a name, a unique identifier, a password and an assigned role.
+
+\subsection{SQLite database}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=01\linewidth]{images/user-table.png}
+    \caption{User Table}
+    \label{fig:first}
+\end{figure}
+
+The service contains a single table, \texttt{users}, mapped by the SQLAlchemy class \texttt{User}, with the following fields:
+
+    \begin{itemize}
+    \item \textbf{\texttt{id}} -- integer primary key, automatically assigned by the database, which acts as the unique user identifier.
+    \item \textbf{\texttt{name}} -- the name of the user (not null).
+    \item \textbf{\texttt{password}} -- the password of the user (not null). In this first part it is stored in plain text, since there is no authentication yet; in the second part it will be stored as a hash.
+    \item \textbf{\texttt{role}} -- the role of the user (not null), stored as an integer. The role is intentionally modelled as an \texttt{IntEnum} (\texttt{Role}) with the values \texttt{ADMINISTRATOR}, \texttt{PROFESSOR}, \texttt{STUDENT} and \texttt{INVIGILATOR} to help with validation and to avoid inconsistencies.
+\end{itemize}
+
+This table is managed by the SQLAlchemy \texttt{User} model, which handles all data access so views never interact directly with the database. It exposes these four methods:
+
+\begin{itemize}
+    \item \texttt{validate(name, password, role)} -- Checks that \texttt{name} and \texttt{password} are non-empty and \texttt{role} is valid. Returns an error message if invalid, or \texttt{None} if valid.
+    \item \texttt{all()} -- Returns all users ordered by ID.
+    \item \texttt{create(name, password, role)} -- Inserts and commits a single user.
+    \item \texttt{bulk\_create(users\_data)} -- Inserts a list of users in a single transaction.
+\end{itemize}
+
+\subsection{Pages and Endpoints}
+
+Table~\ref{tab:user-endpoints} summarizes the endpoints exposed by this service, with their corresponding views described.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \caption{User Service Endpoints}
+    \label{tab:user-endpoints}
+    \begin{tabular}{|p{2.1cm}|p{1.0cm}|p{4.3cm}|}
+        \hline
+        \textbf{Endpoint} & \textbf{Method} & \textbf{Description} \\ \hline
+        \texttt{/} & GET & Redirects to \texttt{/users}. \\ \hline
+        \texttt{/users} & GET & Lists all users (SU\_1). \\ \hline
+        \texttt{/users/create} & GET & Shows the add user form (SU\_2). \\ \cline{2-3}
+         & POST & Validates and creates the user, then redirects to the list. \\ \hline
+        \texttt{/users/bulk} & GET & Shows the bulk add form (SU\_3). \\ \cline{2-3}
+         & POST & Parses, validates and creates all users, then redirects to the list. \\ \hline
+    \end{tabular}
+\end{table}
+
+All pages extend a common layout with a header that links to the three pages of the service.
+
+\textbf{List Users (SU\_1)} -- displays a table with the identifier, name and role of every registered user, or a message when there are no users.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{0.5pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/user_page1.png}}}
+    \caption{List Users Page}
+    \label{fig:list-users}
+\end{figure}
+
+\textbf{Add User (SU\_2)} -- a form with the name, password and a drop-down with the valid roles. If validation fails, the page is rendered again with the error message and the previously filled values.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{0.5pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/user_page2.png}}}
+    \caption{Add User Page}
+    \label{fig:add-user}
+\end{figure}
+
+\textbf{Bulk Add Users (SU\_3)} -- a text area where each line describes a user as comma-separated values, \texttt{name,password,role}. Every line is validated and, if any line is invalid, no user is added and the errors are listed with their line numbers. This all-or-nothing behaviour avoids partially imported lists.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{0.5pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/user_page3.png}}}
+    \caption{Bulk Add Users Page}
+    \label{fig:bulk-add-users}
+\end{figure}
+
+\section{Admin Service}
+The Admin Service is responsible for the management of exams: it allows administrators to schedule exams, enroll students in them and order the printing of the resolution sheets. It is also the only service that communicates with the Printing Service, using XML-RPC. Students are referenced only by their identifier, since the remaining user information belongs to the User Service.
+
+\subsection{SQLite database}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=01\linewidth]{images/admin-tables.png}
+    \caption{Admin Table}
+    \label{fig:second}
+\end{figure}
+
+The database contains two tables. The \texttt{exams} table, mapped by the class \texttt{Exam}, has the following fields:
+\begin{itemize}
+    \item \textbf{\texttt{id}} -- integer primary key, the exam identifier.
+    \item \textbf{\texttt{date}} -- the date of the exam (not null).
+    \item \textbf{\texttt{course}} -- the name of the course (not null).
+\end{itemize}
+
+The \texttt{enrollments} table, mapped by the class \texttt{Enrollment}, stores the students enrolled in each exam:
+\begin{itemize}
+    \item \textbf{\texttt{exam\_id}} -- foreign key to \texttt{exams.id}.
+    \item \textbf{\texttt{student\_id}} -- the identifier of the student in the User Service.
+\end{itemize}
+
+Both columns form a composite primary key, which guarantees that a student is enrolled in an exam at most once. A one-to-many relationship links \texttt{Exam.enrollments} to \texttt{Enrollment.exam}, so that the enrolled students of an exam can be accessed directly.
+
+The methods of the \texttt{Exam} class are:
+\begin{itemize}
+    \item \texttt{validate(date, course)} -- checks that the date is in the \texttt{YYYY-MM-DD} format and that the course is not empty.
+    \item \texttt{all()} -- returns every exam ordered by identifier.
+    \item \texttt{get(exam\_id)} -- returns an exam by its identifier.
+    \item \texttt{create(date, course)} -- inserts a new exam.
+\end{itemize}
+
+The methods of the \texttt{Enrollment} class are:
+\begin{itemize}
+    \item \texttt{all()} -- returns every enrollment ordered by exam and student.
+    \item \texttt{bulk\_create(exam\_id, student\_ids)} -- enrolls a list of students in an exam, skipping the ones already enrolled, and returns the identifiers that were actually added.
+\end{itemize}
+
+\subsection{Pages and Endpoints}
+
+Table~\ref{tab:admin-endpoints} summarizes the endpoints exposed by this service, with their corresponding views described.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \caption{Admin Service Endpoints}
+    \label{tab:admin-endpoints}
+    \begin{tabular}{|p{3cm}|p{0.8cm}|p{3.5cm}|}
+        \hline
+        \textbf{Endpoint} & \textbf{Method} & \textbf{Description} \\ \hline
+        \texttt{/} & GET & Redirects to \texttt{/exams}. \\ \hline
+        \texttt{/exams} & GET & Lists the scheduled exams. \\ \hline
+        \texttt{/exams/create} & GET & Shows the schedule exam form (AD\_1). \\ \cline{2-3}
+         & POST & Validates and creates the exam. \\ \hline
+        \texttt{/exams/<id>/enroll} & GET & Shows the enrollment form (AD\_2). \\ \cline{2-3}
+         & POST & Enrolls the given students. \\ \hline
+        \texttt{/exams/<id>/print} & GET & Shows the printing page (AD\_3). \\ \cline{2-3}
+         & POST & Orders the printing through XML-RPC. \\ \hline
+        \texttt{/enrollments} & GET & Lists all enrollments (ST\_1). \\ \hline
+    \end{tabular}
+\end{table}
+
+All pages share a layout whose header links to the list of exams, the schedule exam page and the list of enrollments.
+
+\textbf{List Exams} -- displays a table with the identifier, date, course and number of enrolled students of each exam, along with links to enroll students and to print the resolution sheets of that exam.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/admin/admin_list.png}}}
+    \caption{List Exams Page}
+    \label{fig:list-exams}
+\end{figure}
+
+\textbf{Schedule Exam (AD\_1)} -- a form with a date picker and the course name. Invalid input is reported on the same page, keeping the filled values.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/admin/admin_schedule.png}}}
+    \caption{Schedule Exam Page}
+    \label{fig:schedule-exam}
+\end{figure}
+
+\textbf{Enroll Students (AD\_2)} -- a text area where the administrator inserts one student identifier per line. If any line is not a valid positive integer, no student is enrolled and the errors are listed. Otherwise, the page reports which students were enrolled and how many were skipped because they were already enrolled. The page also lists the students currently enrolled in the exam.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/admin/admin_enroll.png}}}
+    \caption{Enroll Students Page}
+    \label{fig:enroll-students}
+\end{figure}
+
+\textbf{Print Resolution Sheets (AD\_3)} -- shows the number of enrolled students and a button to order the printing. On submission, the service calls the \texttt{print\_exam} XML-RPC function of the Printing Service with the exam identifier, date, course and number of enrolled students. The Printing Service returns the identifiers of the generated sheets, which are displayed with a link to download the PDF. If the sheets of the exam were already printed, the Printing Service answers with a specific XML-RPC fault, and the page shows that message together with the download link of the existing PDF. An error is also shown if there are no enrolled students, if the remote call fails for another reason or if the Printing Service is unavailable.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/admin/admin_print.png}}}
+    \caption{Print Resolution Sheets Page}
+    \label{fig:print-sheets}
+\end{figure}
+
+\textbf{List Enrollments (ST\_1)} -- displays a table with every enrollment, showing the student identifier and the identifier, date and course of the exam. Following the simplifications of the first part, the list is not filtered by student.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/admin/admin_enroll.png}}}
+    \caption{List Enrollments Page}
+    \label{fig:list-enrollments}
+\end{figure}
+
+
+\vspace{10mm}
+
+
+
+
+
+\section{Printing Service}
+The Printing Service simulates the entity that prints the exam resolution sheets. It only receives orders to print the sheets of an exam, coming from the Admin Service, and never learns which students are enrolled: it only receives the number of sheets to produce. It is a Flask application running on port 5003 that stores its data in its own SQLite file (\texttt{resolutions.sqlite}). Besides the web pages, it exposes an XML-RPC function used by the Admin Service.
+
+\subsection{SQLite database}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=01\linewidth]{images/printing-table.png}
+    \caption{Printing Table}
+    \label{fig:third}
+\end{figure}
+
+The service contains a single table, \texttt{resolution\_sheets}, mapped by the class \texttt{ResolutionSheet}, where each row is one resolution sheet:
+\begin{itemize}
+    \item \textbf{\texttt{id}} -- integer primary key. It is the unique identifier of the sheet and the value encoded in its QR code.
+    \item \textbf{\texttt{exam\_id}} -- the identifier of the exam in the Admin Service (not null).
+    \item \textbf{\texttt{date}} and \textbf{\texttt{course}} -- a copy of the exam information received in the printing order, printed as the title of every page (not null).
+    \item \textbf{\texttt{pdf}} -- the PDF of the sheet with its 4 pages (not null). The column is \emph{deferred}, so the binary content is only loaded from the database when it is actually needed.
+\end{itemize}
+
+The PDF of each sheet is generated from the provided template (\texttt{Exam-template.pdf}) by the helpers in \texttt{utils.py}, which add the course and date as the page title and the QR code with the sheet identifier to the corners of every page. The \texttt{ResolutionSheet} class exposes the following methods:
+\begin{itemize}
+    \item \texttt{validate(exam\_id, date, course, sheets\_num)} -- checks the types and values of the data received in a printing order, returning an error message or \texttt{None}.
+    \item \texttt{exams()} -- returns, for each printed exam, its identifier, date, course and number of sheets.
+    \item \texttt{for\_exam(exam\_id)} -- returns all the sheets of an exam, including their PDFs.
+    \item \texttt{is\_printed(exam\_id)} -- tells whether an exam already has resolution sheets.
+    \item \texttt{bulk\_create(exam\_id, date, course, sheets\_num)} -- creates the sheets of an exam in a single transaction. The rows are first flushed to obtain their identifiers, which are then used to generate each PDF with its QR code. Returns the list of sheet identifiers.
+\end{itemize}
+
+\subsection{Pages and Endpoints}
+
+Table~\ref{tab:printing-endpoints} summarizes the endpoints exposed by this service.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \caption{Printing Service Endpoints}
+    \label{tab:printing-endpoints}
+    \begin{tabular}{|p{2.6cm}|p{0.8cm}|p{3.9cm}|}
+        \hline
+        \textbf{Endpoint} & \textbf{Method} & \textbf{Description} \\ \hline
+        \texttt{/} & GET & Redirects to \texttt{/exams}. \\ \hline
+        \texttt{/exams} & GET & Lists the exams with resolution sheets. \\ \hline
+        \texttt{/exams/<id>/pdf} & GET & Downloads a single PDF with all the sheets of the exam. \\ \hline
+        \texttt{/api} & POST & XML-RPC endpoint exposing the \texttt{print\_exam} function. \\ \hline
+    \end{tabular}
+\end{table}
+
+\textbf{List Printed Exams} -- the only page of the service. It displays a table with the identifier, date, course and number of sheets of each exam that was already printed, with a link to download its PDF. The downloaded file merges the PDFs of all the sheets, so it has $4 \times n_{students}$ pages.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/printing/printing_list.png}}}
+    \caption{List Printed Exams Page}
+    \label{fig:list-printed-exams}
+\end{figure}
+
+\subsection{Connection with the Admin Service}
+
+The Printing Service and the Admin Service communicate through XML-RPC. The Printing Service registers the \texttt{print\_exam} function in an \texttt{XMLRPCHandler} (from \texttt{flask\_xmlrpcre}) mounted on \texttt{/api}, and the Admin Service calls it through an \texttt{xmlrpc.client.ServerProxy} pointing to that address. The call is done when the administrator submits the Print Resolution Sheets page (AD\_3), as follows:
+\begin{enumerate}
+    \item The Admin Service checks that the exam has enrolled students and calls \texttt{print\_exam(exam\_id, date, course, sheets\_num)}, where the date is sent as an ISO string and \texttt{sheets\_num} is the number of enrolled students.
+    \item The Printing Service validates the arguments and checks that the exam was not printed before. If everything is correct, it creates one sheet per student and returns the list of the new sheet identifiers.
+    \item The Admin Service shows the identifiers and a link to \texttt{/exams/<id>/pdf} on the Printing Service, from where the PDF is downloaded directly.
+\end{enumerate}
+
+Errors are reported with XML-RPC faults, whose codes are defined in the \texttt{settings.py} of both services:
+\begin{itemize}
+    \item \textbf{1 -- invalid data}: the arguments failed the validation. The Admin Service shows the fault message.
+    \item \textbf{2 -- already printed}: the exam already has resolution sheets, so printing it again would create sheets with different identifiers for the same exam. The Admin Service shows the message together with the link to the existing PDF.
+\end{itemize}
+
+If the Printing Service cannot be reached, the Admin Service catches the connection error and shows that the printing service is unavailable. Since only the exam identifier, date, course and the number of students are sent, the Printing Service never knows the identity of the students, and the association between students and sheets is left to the exam invigilators.
+
+\section{Correction Service}
+The Correction Service is where the scans of the exam resolutions are uploaded, split into questions and corrected by the professors. It is a Flask application running on port 5004 that stores its data in its own SQLite file (\texttt{corrections.sqlite}). As stated in the simplifications of the first part, it is not connected to the Admin Service, so exam and professor identifiers are not validated against other services, and all lists show every entry independently of the professor.
+
+\subsection{SQLite database}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=01\linewidth]{images/correction-tables.png}
+    \caption{Correction Tables}
+    \label{fig:fourth}
+\end{figure}
+
+The database contains three tables. The \texttt{professor\_assignments} table, mapped by the class \texttt{ProfessorAssignment}, stores which professor corrects each question of an exam:
+\begin{itemize}
+    \item \textbf{\texttt{exam\_id}} and \textbf{\texttt{question\_number}} -- together form a composite primary key, which guarantees that each question of an exam is corrected by a single professor.
+    \item \textbf{\texttt{professor\_id}} -- the identifier of the professor in the User Service (not null).
+\end{itemize}
+
+The \texttt{exam\_correction\_pdfs} table, mapped by the class \texttt{ExamCorrectionPdf}, stores each uploaded scan:
+\begin{itemize}
+    \item \textbf{\texttt{id}} -- integer primary key.
+    \item \textbf{\texttt{exam\_id}} -- the exam the scan belongs to (not null).
+    \item \textbf{\texttt{pdf}} -- the original scanned PDF (not null, deferred).
+\end{itemize}
+
+The \texttt{question\_corrections} table, mapped by the class \texttt{QuestionCorrection}, stores each page of a scan, which corresponds to the answer to one question:
+\begin{itemize}
+    \item \textbf{\texttt{id}} -- integer primary key.
+    \item \textbf{\texttt{exam\_pdf\_id}} -- foreign key to \texttt{exam\_correction\_pdfs.id}.
+    \item \textbf{\texttt{sheet\_id}} -- the resolution sheet identifier, read from the QR code of the page.
+    \item \textbf{\texttt{question\_number}} -- the position of the page in the sheet, from 1 to 4.
+    \item \textbf{\texttt{image}} -- a PNG of the page with the QR codes covered (not null, deferred).
+    \item \textbf{\texttt{evaluated}} -- whether the answer was already corrected (default false).
+    \item \textbf{\texttt{grade}} -- the grade given by the professor, from 0 to 5, null until corrected.
+\end{itemize}
+
+A one-to-many relationship links \texttt{ExamCorrectionPdf.corrections} to \texttt{QuestionCorrection.exam\_pdf}, so each scan gives origin to $4 \times n_{sheets}$ corrections. The methods of each class are:
+\begin{itemize}
+    \item \texttt{ProfessorAssignment.validate}, \texttt{all}, \texttt{get} and \texttt{assign} -- validate, list, get and save an assignment. \texttt{get(exam\_id, question\_number)} looks up an assignment by its composite primary key, and is used to reject the assignment of a question that already has a professor.
+    \item \texttt{ExamCorrectionPdf.validate}, \texttt{all}, \texttt{get} and \texttt{create} -- validate the exam identifier, list and get scans, and store a scan together with all its pages in a single transaction.
+    \item \texttt{QuestionCorrection.validate\_grade} and \texttt{get} -- validate a grade and get a correction.
+    \item \texttt{QuestionCorrection.list\_with\_professor(evaluated)} -- lists the pending or the corrected answers together with the assigned professor, obtained with an outer join with \texttt{professor\_assignments} on the exam and question number.
+    \item \texttt{QuestionCorrection.uploaded\_sheets(sheet\_ids)} -- returns which of the given sheets were already uploaded.
+    \item \texttt{QuestionCorrection.sheets()} and \texttt{for\_sheet(sheet\_id)} -- list every sheet with its number of corrected questions and the sum of the grades, and get the 4 answers of a sheet.
+    \item \texttt{correct(grade)} -- saves the grade and marks the answer as evaluated.
+\end{itemize}
+
+The processing of the scans is done in \texttt{utils.py} by \texttt{split\_scan}, which reuses the functions provided in the laboratory code (\texttt{process\_student\_answers.py}). It first opens the uploaded PDF and checks that its number of pages is a multiple of 4. Then:
+\begin{enumerate}
+    \item \texttt{split\_pdf\_into\_pages} splits the scan into one PDF per page.
+    \item \texttt{read\_qr\_code\_values} renders each page as an image and reads its QR codes with OpenCV. It is the laboratory's \texttt{print\_qr\_code\_values}, changed to return the values instead of printing them.
+    \item \texttt{cover\_qr\_codes\_with\_gray\_squares} draws a grey square over each QR code of the pages.
+    \item For each group of 4 pages, the values read must give exactly one sheet identifier, so a single readable QR code in the sheet is enough, and the sheet cannot appear twice in the scan. The position of each page in the group gives its question number.
+    \item Each covered page is rendered as a PNG, which is what gets stored.
+\end{enumerate}
+
+\subsection{Pages and Endpoints}
+
+Table~\ref{tab:correction-endpoints} summarizes the endpoints exposed by this service.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \caption{Correction Service Endpoints}
+    \label{tab:correction-endpoints}
+    \begin{tabular}{|p{2.9cm}|p{0.8cm}|p{3.6cm}|}
+        \hline
+        \textbf{Endpoint} & \textbf{Method} & \textbf{Description} \\ \hline
+        \texttt{/} & GET & Redirects to \texttt{/corrections}. \\ \hline
+        \texttt{/assignments} & GET & Lists the professor assignments. \\ \hline
+        \texttt{/assignments/}\allowbreak\texttt{create} & GET & Shows the assign professor form (AD\_4). \\ \cline{2-3}
+         & POST & Validates and saves the assignment. \\ \hline
+        \texttt{/scans} & GET & Lists the uploaded scans. \\ \hline
+        \texttt{/scans/upload} & GET & Shows the upload form (AD\_5). \\ \cline{2-3}
+         & POST & Validates, splits and stores the scan. \\ \hline
+        \texttt{/scans/<id>/pdf} & GET & Downloads the original scan. \\ \hline
+        \texttt{/corrections} & GET & Lists the answers to correct (PR\_1). \\ \hline
+        \texttt{/corrections/done} & GET & Lists the corrected answers (PR\_3). \\ \hline
+        \texttt{/corrections/<id>} & GET & Shows an answer and the grade form (PR\_2). \\ \cline{2-3}
+         & POST & Validates and saves the grade. \\ \hline
+        \texttt{/corrections/<id>}\allowbreak\texttt{/image} & GET & Returns the image of an answer. \\ \hline
+        \texttt{/resolutions} & GET & Lists the resolution sheets (ST\_3). \\ \hline
+        \texttt{/resolutions/<id>} & GET & Shows a sheet with its corrections (ST\_3). \\ \hline
+    \end{tabular}
+\end{table}
+
+All pages share a layout whose header links to the main pages of the service.
+
+\textbf{Assign Professor (AD\_4)} -- a form with the exam identifier, a drop-down with the question number (1 to 4) and the professor identifier. If the question already has a professor, the assignment is rejected and the page shows the professor it is assigned to, keeping the filled values. This way, an existing assignment is never replaced by mistake. The List Assignments page shows every assignment in a table.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/correction/correction_assign.png}}}
+    \caption{Assign Professor Page}
+    \label{fig:assign-professor}
+\end{figure}
+
+\textbf{Upload Scan (AD\_5)} -- a form with the exam identifier and the PDF file. The scan is rejected, with the reason shown on the page, if it is not a valid PDF, if its number of pages is not a multiple of 4, if a QR code cannot be read, or if a sheet is repeated or was already uploaded. The List Scans page shows each scan with its number of pages and sheets and a link to download the original PDF.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/correction/correction_upload.png}}}
+    \caption{Upload Scan Page}
+    \label{fig:upload-scan}
+\end{figure}
+
+\textbf{Answers to Correct (PR\_1) and Corrected Answers (PR\_3)} -- both pages use the same template and display a table with the exam, the question number, the assigned professor (or \emph{unassigned}) and the grade of each answer, with a link to correct it or to change its grade.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/correction/correction_pending.png}}}
+    \caption{Answers to Correct Page}
+    \label{fig:answers-to-correct}
+\end{figure}
+
+\textbf{Correct Answer (PR\_2)} -- shows the image of the answer, with the QR codes covered, and a form to give a grade between 0 and 5. An invalid grade is reported on the same page.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/correction/correction_correct.png}}}
+    \caption{Correct Answer Page}
+    \label{fig:correct-answer}
+\end{figure}
+
+\textbf{Resolutions (ST\_3)} -- lists every resolution sheet with its exam, the number of corrected questions and the final grade once all 4 questions are corrected. Each sheet links to a page that shows the 4 answers with their grades. As the association between students and sheets is only done in the second part, this page shows sheet identifiers instead of students, so ST\_3 is partially implemented.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt}
+    \setlength{\fboxrule}{1pt}
+    {\color{borderblue}\fbox{\includegraphics[width=\linewidth]{images/correction/correction_resolution.png}}}
+    \caption{Resolution Sheet Page}
+    \label{fig:resolution-sheet}
+\end{figure}
+
+\vspace{5mm}
+\printbibliography
+
+\end{document}
