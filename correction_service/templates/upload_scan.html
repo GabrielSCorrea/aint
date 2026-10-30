@@ -3,7 +3,7 @@
 {% block content %}
 <h3>Upload Scan</h3>
 
-{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+{% if error %}<p class="error">{{error}}</p>{% endif %}
 
 <p>The scanned PDF of the exam's resolution sheets, 4 pages per sheet.</p>
 <form action="/scans/upload" method="post" enctype="multipart/form-data">

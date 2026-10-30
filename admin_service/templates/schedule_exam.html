@@ -3,7 +3,7 @@
 {% block content %}
 <h3>Schedule Exam</h3>
 
-{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+{% if error %}<p class="error">{{error}}</p>{% endif %}
 
 <form action="/exams/create" method="post">
   <p>Date: <input type="date" name="date" value="{{date}}"></p>

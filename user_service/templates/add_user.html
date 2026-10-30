@@ -3,7 +3,7 @@
 {% block content %}
 <h3>Add User</h3>
 
-{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+{% if error %}<p class="error">{{error}}</p>{% endif %}
 
 <form action="/users/create" method="post">
   <p>Name: <input type="text" name="name" value="{{name}}"></p>

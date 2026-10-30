@@ -4,17 +4,19 @@
 <h3>Enroll Students: {{exam.course}} ({{exam.date}})</h3>
 
 {% if new_ids is defined %}
-<p style="color:green">
+<p class="success">
   Enrolled {{new_ids | length}} new student(s){% if new_ids %}: {{new_ids | join(", ")}}{% endif %}.
   {% if skipped %}{{skipped}} already enrolled student(s) skipped.{% endif %}
 </p>
 {% endif %}
 
 {% if errors %}
-<p style="color:red">No students were enrolled. Fix the following lines:</p>
-<ul style="color:red">
-  {% for e in errors %}<li>{{e}}</li>{% endfor %}
-</ul>
+<div class="error">
+  <p>No students were enrolled. Fix the following lines:</p>
+  <ul>
+    {% for e in errors %}<li>{{e}}</li>{% endfor %}
+  </ul>
+</div>
 {% endif %}
 
 <p>One student id per line:</p>

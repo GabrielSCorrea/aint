@@ -4,12 +4,12 @@
 <h3>Print Resolution Sheets: {{exam.course}} ({{exam.date}})</h3>
 
 {% if sheet_ids %}
-<p style="color:green">
+<p class="success">
   Printed {{sheet_ids | length}} sheet(s): {{sheet_ids | join(", ")}}.
 </p>
 {% endif %}
 
-{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+{% if error %}<p class="error">{{error}}</p>{% endif %}
 
 {% if pdf_url %}<p><a href="{{pdf_url}}">Download PDF</a></p>{% endif %}
 

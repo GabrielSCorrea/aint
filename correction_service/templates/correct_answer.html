@@ -3,7 +3,7 @@
 {% block content %}
 <h3>Exam {{correction.exam_pdf.exam_id}} - Question {{correction.question_number}}</h3>
 
-{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+{% if error %}<p class="error">{{error}}</p>{% endif %}
 
 <form action="/corrections/{{correction.id}}" method="post">
   <p>

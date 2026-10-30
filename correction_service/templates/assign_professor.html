@@ -3,7 +3,7 @@
 {% block content %}
 <h3>Assign Professor</h3>
 
-{% if error %}<p style="color:red">{{error}}</p>{% endif %}
+{% if error %}<p class="error">{{error}}</p>{% endif %}
 
 <form action="/assignments/create" method="post">
   <p>Exam id: <input type="text" name="exam_id" value="{{exam_id}}"></p>

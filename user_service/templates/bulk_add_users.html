@@ -7,10 +7,12 @@
 <p>Valid roles: {{ roles | join(", ") }}</p>
 
 {% if errors %}
-<p style="color:red">No users were added. Fix the following lines:</p>
-<ul style="color:red">
-  {% for e in errors %}<li>{{e}}</li>{% endfor %}
-</ul>
+<div class="error">
+  <p>No users were added. Fix the following lines:</p>
+  <ul>
+    {% for e in errors %}<li>{{e}}</li>{% endfor %}
+  </ul>
+</div>
 {% endif %}
 
 <form action="/users/bulk" method="post">
