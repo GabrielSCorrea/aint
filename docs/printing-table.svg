@@ -16,7 +16,7 @@
 <text x="276" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="380" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
 <line x1="41" y1="166" x2="539" y2="166" stroke="#e3e7ec" stroke-width="1"/>
-<text x="132" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">examId</text>
+<text x="132" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">exam_id</text>
 <text x="276" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="380" y="189" font-size="12.5" fill="#5d6875">NOT NULL</text>
 <line x1="41" y1="202" x2="539" y2="202" stroke="#e3e7ec" stroke-width="1"/>

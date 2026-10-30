@@ -36,13 +36,13 @@
 <text x="709" y="152" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
 <rect x="730" y="139" width="30" height="18" rx="9" fill="#ffffff" stroke="#2563a8" stroke-width="1.2"/>
 <text x="745" y="152" font-size="10.5" fill="#2563a8" font-weight="bold" text-anchor="middle">FK</text>
-<text x="772" y="153" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">examId</text>
+<text x="772" y="153" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">exam_id</text>
 <text x="916" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="1020" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
 <line x1="681" y1="166" x2="1179" y2="166" stroke="#e3e7ec" stroke-width="1"/>
 <rect x="694" y="175" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
 <text x="709" y="188" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
-<text x="772" y="189" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">studentId</text>
+<text x="772" y="189" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">student_id</text>
 <text x="916" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="1020" y="189" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
 <polyline points="540,148.0 680,148.0" fill="none" stroke="#7a8796" stroke-width="1.4"/>
@@ -56,6 +56,6 @@
 <text x="660" y="136.0" font-size="11.5" fill="#5d6875" font-weight="bold" text-anchor="middle">0..N</text>
 <line x1="930" y1="202" x2="930" y2="232" stroke="#7a8796" stroke-width="1.4" stroke-dasharray="5 4"/>
 <rect x="680" y="232" width="500" height="60" rx="6" fill="#f8fafc" stroke="#c3cbd5" stroke-width="1.25"/>
-<text x="696" y="256" font-size="13" fill="#2b3440" font-weight="bold">Composite primary key (examId, studentId)</text>
+<text x="696" y="256" font-size="13" fill="#2b3440" font-weight="bold">Composite primary key (exam_id, student_id)</text>
 <text x="696" y="278" font-size="13" fill="#2b3440">a student is enrolled in each exam at most once</text>
 </svg>

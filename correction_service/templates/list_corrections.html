@@ -6,11 +6,11 @@
 {% if corrections %}
 <table border="1">
   <tr><th>Exam Id</th><th>Question</th><th>Professor Id</th><th>Grade</th><th></th></tr>
-  {% for c, professorId in corrections %}
+  {% for c, professor_id in corrections %}
   <tr>
-    <td>{{c.examPdf.examId}}</td>
-    <td>{{c.questionNumber}}</td>
-    <td>{% if professorId %}{{professorId}}{% else %}unassigned{% endif %}</td>
+    <td>{{c.exam_pdf.exam_id}}</td>
+    <td>{{c.question_number}}</td>
+    <td>{% if professor_id %}{{professor_id}}{% else %}unassigned{% endif %}</td>
     <td>{% if c.evaluated %}{{c.grade}}{% endif %}</td>
     <td>
       <a href="/corrections/{{c.id}}">{% if c.evaluated %}Change grade{% else %}Correct{% endif %}</a>

@@ -11,13 +11,13 @@ def index():
     return redirect("/exams")
 
 
-def listExams():
-    return render_template("listExams.html", exams=models.Exam.all())
+def list_exams():
+    return render_template("list_exams.html", exams=models.Exam.all())
 
 
-def scheduleExam():
+def schedule_exam():
     if request.method == "GET":
-        return render_template("scheduleExam.html")
+        return render_template("schedule_exam.html")
     else:
         date = request.form["date"]
         course = request.form["course"].strip()
@@ -26,7 +26,7 @@ def scheduleExam():
 
         if error:
             return render_template(
-                "scheduleExam.html", error=error, date=date, course=course
+                "schedule_exam.html", error=error, date=date, course=course
             )
 
         models.Exam.create(date, course)
@@ -34,59 +34,64 @@ def scheduleExam():
         return redirect("/exams")
 
 
-def enrollExam(examId):
-    exam = models.Exam.get(examId)
+def enroll_exam(exam_id):
+    exam = models.Exam.get(exam_id)
 
     if exam is None:
         abort(404)
 
     if request.method == "GET":
-        return render_template("enrollExam.html", exam=exam)
+        return render_template("enroll_exam.html", exam=exam)
     else:
-        text = request.form["studentIds"]
-        studentIds, errors = utils.parseStudentIds(text)
+        text = request.form["student_ids"]
+        student_ids, errors = utils.parse_student_ids(text)
 
-        if not studentIds and not errors:
+        if not student_ids and not errors:
             errors = ["no student ids given"]
 
         if errors:
             return render_template(
-                "enrollExam.html", exam=exam, studentIdsText=text, errors=errors
+                "enroll_exam.html", exam=exam, student_ids_text=text, errors=errors
             )
 
-        newIds = models.Enrollment.bulkCreate(exam.id, studentIds)
+        new_ids = models.Enrollment.bulk_create(exam.id, student_ids)
+
+        unique_ids = []
+        for student_id in student_ids:
+            if student_id not in unique_ids:
+                unique_ids.append(student_id)
 
         return render_template(
-            "enrollExam.html",
+            "enroll_exam.html",
             exam=exam,
-            newIds=newIds,
-            skipped=len(set(studentIds)) - len(newIds),
+            new_ids=new_ids,
+            skipped=len(unique_ids) - len(new_ids),
         )
 
 
-def orderPrinting(examId):
-    exam = models.Exam.get(examId)
+def order_printing(exam_id):
+    exam = models.Exam.get(exam_id)
     if exam is None:
         abort(404)
 
     if request.method == "GET":
-        return render_template("orderPrinting.html", exam=exam)
+        return render_template("order_printing.html", exam=exam)
 
     if not exam.enrollments:
         return render_template(
-            "orderPrinting.html", exam=exam, error="no students enrolled"
+            "order_printing.html", exam=exam, error="no students enrolled"
         )
 
-    pdfUrl = f"{PRINTING_SERVICE}/exams/{exam.id}/pdf"
+    pdf_url = f"{PRINTING_SERVICE}/exams/{exam.id}/pdf"
     proxy = client.ServerProxy(PRINTING_API)
     try:
-        sheetIds = proxy.printExam(
+        sheet_ids = proxy.print_exam(
             exam.id, exam.date.isoformat(), exam.course, len(exam.enrollments)
         )
     except client.Fault as err:
         if err.faultCode == ALREADY_PRINTED_FAULT:
             return render_template(
-                "orderPrinting.html", exam=exam, error=err.faultString, pdfUrl=pdfUrl
+                "order_printing.html", exam=exam, error=err.faultString, pdf_url=pdf_url
             )
 
         error = err.faultString
@@ -94,11 +99,11 @@ def orderPrinting(examId):
         error = "printing service unavailable"
     else:
         return render_template(
-            "orderPrinting.html", exam=exam, sheetIds=sheetIds, pdfUrl=pdfUrl
+            "order_printing.html", exam=exam, sheet_ids=sheet_ids, pdf_url=pdf_url
         )
 
-    return render_template("orderPrinting.html", exam=exam, error=error)
+    return render_template("order_printing.html", exam=exam, error=error)
 
 
-def listEnrollments():
-    return render_template("listEnrollments.html", enrollments=models.Enrollment.all())
+def list_enrollments():
+    return render_template("list_enrollments.html", enrollments=models.Enrollment.all())

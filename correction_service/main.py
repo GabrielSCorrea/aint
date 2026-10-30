@@ -1,14 +1,14 @@
 from flask import Flask
 
 from settings import session
-from urls import registerUrls
+from urls import register_urls
 
 app = Flask(__name__)
-registerUrls(app)
+register_urls(app)
 
 
 @app.teardown_appcontext
-def removeSession(exception=None):
+def remove_session(exception=None):
     session.remove()
 
 

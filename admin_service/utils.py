@@ -1,20 +1,20 @@
-def parseStudentIds(text):
-    studentIds = []
+def parse_student_ids(text):
+    student_ids = []
     errors = []
-    for lineNumber, line in enumerate(text.splitlines(), start=1):
+    for line_number, line in enumerate(text.splitlines(), start=1):
         line = line.strip()
         if not line:
             continue
 
         try:
-            studentId = int(line)
+            student_id = int(line)
         except ValueError:
-            studentId = -1
+            student_id = -1
 
-        if studentId < 1:
+        if student_id < 1:
             error = f"'{line}' is not a valid student id"
-            errors.append(f"line {lineNumber}: {error}")
+            errors.append(f"line {line_number}: {error}")
         else:
-            studentIds.append(studentId)
+            student_ids.append(student_id)
 
-    return studentIds, errors
+    return student_ids, errors

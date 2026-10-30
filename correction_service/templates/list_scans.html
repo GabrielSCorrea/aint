@@ -9,7 +9,7 @@
   {% for s in scans %}
   <tr>
     <td>{{s.id}}</td>
-    <td>{{s.examId}}</td>
+    <td>{{s.exam_id}}</td>
     <td>{{s.corrections | length}}</td>
     <td>{{(s.corrections | length) // 4}}</td>
     <td><a href="/scans/{{s.id}}/pdf">Download PDF</a></td>

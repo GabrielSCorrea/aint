@@ -53,17 +53,17 @@ def add_qr_code_to_pages(document, value) -> None:
             page.insert_image(qr_rect, stream=image_bytes)
 
 
-def makeSheetPdf(sheetId, title):
+def make_sheet_pdf(sheet_id, title):
     document = pymupdf.open(TEMPLATE_FILE)
     document.delete_page(0)
 
     add_page_titles(document, title)
-    add_qr_code_to_pages(document, str(sheetId))
+    add_qr_code_to_pages(document, str(sheet_id))
 
     return document.tobytes()
 
 
-def mergePdfs(pdfs):
+def merge_pdfs(pdfs):
     document = pymupdf.open()
     for pdf in pdfs:
         document.insert_pdf(pymupdf.open(stream=pdf, filetype="pdf"))

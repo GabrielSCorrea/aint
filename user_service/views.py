@@ -8,13 +8,13 @@ def index():
     return redirect("/users")
 
 
-def listUsers():
-    return render_template("listUsers.html", users=models.User.all())
+def list_users():
+    return render_template("list_users.html", users=models.User.all())
 
 
-def addUser():
+def add_user():
     if request.method == "GET":
-        return render_template("addUser.html", roles=models.ROLES)
+        return render_template("add_user.html", roles=models.ROLES)
     else:
         name = request.form["name"].strip()
         password = request.form["password"]
@@ -24,7 +24,7 @@ def addUser():
 
         if error:
             return render_template(
-                "addUser.html", roles=models.ROLES, error=error, name=name, role=role
+                "add_user.html", roles=models.ROLES, error=error, name=name, role=role
             )
 
         models.User.create(name, password, role)
@@ -32,21 +32,24 @@ def addUser():
         return redirect("/users")
 
 
-def bulkAddUsers():
+def bulk_add_users():
     if request.method == "GET":
-        return render_template("bulkAddUsers.html", roles=models.ROLES)
+        return render_template("bulk_add_users.html", roles=models.ROLES)
     else:
-        text = request.form["usersText"]
-        users, errors = utils.parseUsersText(text)
+        text = request.form["users_text"]
+        users, errors = utils.parse_users_text(text)
 
         if not users and not errors:
             errors = ["no users given"]
 
         if errors:
             return render_template(
-                "bulkAddUsers.html", roles=models.ROLES, usersText=text, errors=errors
+                "bulk_add_users.html",
+                roles=models.ROLES,
+                users_text=text,
+                errors=errors,
             )
 
-        models.User.bulkCreate(users)
+        models.User.bulk_create(users)
 
         return redirect("/users")

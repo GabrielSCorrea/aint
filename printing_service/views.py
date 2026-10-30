@@ -12,35 +12,35 @@ def index():
     return redirect("/exams")
 
 
-def listExams():
-    return render_template("listExams.html", exams=models.ResolutionSheet.exams())
+def list_exams():
+    return render_template("list_exams.html", exams=models.ResolutionSheet.exams())
 
 
-def downloadExamPdf(examId):
-    sheets = models.ResolutionSheet.forExam(examId)
+def download_exam_pdf(exam_id):
+    sheets = models.ResolutionSheet.for_exam(exam_id)
     if not sheets:
         abort(404)
 
     pdfs = []
     for sheet in sheets:
         pdfs.append(sheet.pdf)
-    pdf = utils.mergePdfs(pdfs)
+    pdf = utils.merge_pdfs(pdfs)
 
     return send_file(
         BytesIO(pdf),
         mimetype="application/pdf",
-        download_name=f"exam-{examId}.pdf",
+        download_name=f"exam-{exam_id}.pdf",
     )
 
 
-def printExam(examId, date, course, sheetsNum):
-    error = models.ResolutionSheet.validate(examId, date, course, sheetsNum)
+def print_exam(exam_id, date, course, sheets_num):
+    error = models.ResolutionSheet.validate(exam_id, date, course, sheets_num)
 
     if error:
         raise Fault(INVALID_DATA_FAULT, error)
 
-    if models.ResolutionSheet.isPrinted(examId):
-        error = f"exam {examId} already has resolution sheets"
+    if models.ResolutionSheet.is_printed(exam_id):
+        error = f"exam {exam_id} already has resolution sheets"
         raise Fault(ALREADY_PRINTED_FAULT, error)
 
-    return models.ResolutionSheet.bulkCreate(examId, date, course, sheetsNum)
+    return models.ResolutionSheet.bulk_create(exam_id, date, course, sheets_num)

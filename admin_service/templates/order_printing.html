@@ -3,15 +3,15 @@
 {% block content %}
 <h3>Print Resolution Sheets: {{exam.course}} ({{exam.date}})</h3>
 
-{% if sheetIds %}
+{% if sheet_ids %}
 <p style="color:green">
-  Printed {{sheetIds | length}} sheet(s): {{sheetIds | join(", ")}}.
+  Printed {{sheet_ids | length}} sheet(s): {{sheet_ids | join(", ")}}.
 </p>
 {% endif %}
 
 {% if error %}<p style="color:red">{{error}}</p>{% endif %}
 
-{% if pdfUrl %}<p><a href="{{pdfUrl}}">Download PDF</a></p>{% endif %}
+{% if pdf_url %}<p><a href="{{pdf_url}}">Download PDF</a></p>{% endif %}
 
 <p>Enrolled students: {{exam.enrollments | length}}</p>
 <form action="/exams/{{exam.id}}/print" method="post">

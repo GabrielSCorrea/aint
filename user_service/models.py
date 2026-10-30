@@ -25,10 +25,10 @@ class User(Base):
     role = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return f"<User(id={self.id}, name='{self.name}', role='{self.roleName}')>"
+        return f"<User(id={self.id}, name='{self.name}', role='{self.role_name}')>"
 
     @property
-    def roleName(self):
+    def role_name(self):
         return Role(self.role).name.lower()
 
     @staticmethod
@@ -56,8 +56,8 @@ class User(Base):
         return user
 
     @classmethod
-    def bulkCreate(cls, usersData):
-        for name, password, role in usersData:
+    def bulk_create(cls, users_data):
+        for name, password, role in users_data:
             session.add(cls(name=name, password=password, role=Role[role.upper()]))
         session.commit()
 

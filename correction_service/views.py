@@ -11,131 +11,135 @@ def index():
     return redirect("/corrections")
 
 
-def listAssignments():
+def list_assignments():
     return render_template(
-        "listAssignments.html", assignments=models.ProfessorAssignment.all()
+        "list_assignments.html", assignments=models.ProfessorAssignment.all()
     )
 
 
-def assignProfessor():
+def assign_professor():
     if request.method == "GET":
-        return render_template("assignProfessor.html", questions=QUESTIONS)
+        return render_template("assign_professor.html", questions=QUESTIONS)
     else:
-        examId = utils.parseInt(request.form["examId"])
-        questionNumber = utils.parseInt(request.form["questionNumber"])
-        professorId = utils.parseInt(request.form["professorId"])
+        exam_id = utils.parse_int(request.form["exam_id"])
+        question_number = utils.parse_int(request.form["question_number"])
+        professor_id = utils.parse_int(request.form["professor_id"])
 
-        error = models.ProfessorAssignment.validate(examId, questionNumber, professorId)
+        error = models.ProfessorAssignment.validate(
+            exam_id, question_number, professor_id
+        )
         if error is None:
-            assignment = models.ProfessorAssignment.get(examId, questionNumber)
+            assignment = models.ProfessorAssignment.get(exam_id, question_number)
             if assignment is not None:
-                error = f"question {questionNumber} of exam {examId} is already assigned to professor {assignment.professorId}"
+                error = f"question {question_number} of exam {exam_id} is already assigned to professor {assignment.professor_id}"
         if error:
             return render_template(
-                "assignProfessor.html",
+                "assign_professor.html",
                 questions=QUESTIONS,
                 error=error,
-                examId=request.form["examId"],
-                questionNumber=questionNumber,
-                professorId=request.form["professorId"],
+                exam_id=request.form["exam_id"],
+                question_number=question_number,
+                professor_id=request.form["professor_id"],
             )
 
-        models.ProfessorAssignment.assign(examId, questionNumber, professorId)
+        models.ProfessorAssignment.assign(exam_id, question_number, professor_id)
 
         return redirect("/assignments")
 
 
-def listScans():
-    return render_template("listScans.html", scans=models.ExamCorrectionPdf.all())
+def list_scans():
+    return render_template("list_scans.html", scans=models.ExamCorrectionPdf.all())
 
 
-def uploadScan():
+def upload_scan():
     if request.method == "GET":
-        return render_template("uploadScan.html")
+        return render_template("upload_scan.html")
     else:
-        examIdText = request.form["examId"]
-        examId = utils.parseInt(examIdText)
+        exam_id_text = request.form["exam_id"]
+        exam_id = utils.parse_int(exam_id_text)
         file = request.files.get("pdf")
 
-        error = models.ExamCorrectionPdf.validate(examId)
+        error = models.ExamCorrectionPdf.validate(exam_id)
         if error is None and not file:
             error = "no PDF file given"
 
         if error is None:
             pdf = file.read()
             try:
-                pages = utils.splitScan(pdf)
+                pages = utils.split_scan(pdf)
             except ValueError as err:
                 error = str(err)
 
         if error is None:
-            sheetIds = []
-            for sheetId, _, _ in pages:
-                sheetIds.append(sheetId)
+            sheet_ids = []
+            for sheet_id, _, _ in pages:
+                sheet_ids.append(sheet_id)
 
-            uploaded = models.QuestionCorrection.uploadedSheets(sheetIds)
+            uploaded = models.QuestionCorrection.uploaded_sheets(sheet_ids)
             if uploaded:
                 error = f"sheet(s) already uploaded: {', '.join(map(str, uploaded))}"
 
         if error:
-            return render_template("uploadScan.html", error=error, examId=examIdText)
+            return render_template(
+                "upload_scan.html", error=error, exam_id=exam_id_text
+            )
 
-        models.ExamCorrectionPdf.create(examId, pdf, pages)
+        models.ExamCorrectionPdf.create(exam_id, pdf, pages)
 
         return redirect("/scans")
 
 
-def downloadScan(examPdfId):
-    examPdf = models.ExamCorrectionPdf.get(examPdfId)
+def download_scan(exam_pdf_id):
+    exam_pdf = models.ExamCorrectionPdf.get(exam_pdf_id)
 
-    if examPdf is None:
+    if exam_pdf is None:
         abort(404)
 
     return send_file(
-        BytesIO(examPdf.pdf),
+        BytesIO(exam_pdf.pdf),
         mimetype="application/pdf",
-        download_name=f"scan-{examPdf.id}.pdf",
+        download_name=f"scan-{exam_pdf.id}.pdf",
     )
 
 
-def listPending():
+def list_pending():
     return render_template(
-        "listCorrections.html",
+        "list_corrections.html",
         title="Answers to Correct",
-        corrections=models.QuestionCorrection.listWithProfessor(False),
+        corrections=models.QuestionCorrection.list_with_professor(False),
     )
 
 
-def listCorrected():
+def list_corrected():
     return render_template(
-        "listCorrections.html",
+        "list_corrections.html",
         title="Corrected Answers",
-        corrections=models.QuestionCorrection.listWithProfessor(True),
+        corrections=models.QuestionCorrection.list_with_professor(True),
     )
 
 
-def correctAnswer(correctionId):
-    correction = models.QuestionCorrection.get(correctionId)
+def correct_answer(correction_id):
+    correction = models.QuestionCorrection.get(correction_id)
     if correction is None:
         abort(404)
 
     if request.method == "GET":
         return render_template(
-            "correctAnswer.html", correction=correction, maxGrade=MAX_GRADE
+            "correct_answer.html", correction=correction, max_grade=MAX_GRADE
         )
     else:
-        gradeText = request.form["grade"]
-        grade = utils.parseGrade(gradeText)
+        grade_text = request.form["grade"]
+        grade = utils.parse_grade(grade_text)
 
-        error = models.QuestionCorrection.validateGrade(grade)
+        error = models.QuestionCorrection.validate_grade(grade)
 
         if error:
             return render_template(
-                "correctAnswer.html",
+                "correct_answer.html",
                 correction=correction,
-                maxGrade=MAX_GRADE,
+                max_grade=MAX_GRADE,
                 error=error,
-                gradeText=gradeText,
+                grade_text=grade_text,
             )
 
         correction.correct(grade)
@@ -143,24 +147,24 @@ def correctAnswer(correctionId):
         return redirect("/corrections")
 
 
-def correctionImage(correctionId):
-    correction = models.QuestionCorrection.get(correctionId)
+def correction_image(correction_id):
+    correction = models.QuestionCorrection.get(correction_id)
     if correction is None:
         abort(404)
 
     return send_file(BytesIO(correction.image), mimetype="image/png")
 
 
-def listResolutions():
+def list_resolutions():
     return render_template(
-        "listResolutions.html",
+        "list_resolutions.html",
         sheets=models.QuestionCorrection.sheets(),
         questions=QUESTIONS,
     )
 
 
-def showResolution(sheetId):
-    corrections = models.QuestionCorrection.forSheet(sheetId)
+def show_resolution(sheet_id):
+    corrections = models.QuestionCorrection.for_sheet(sheet_id)
     if not corrections:
         abort(404)
 
@@ -173,5 +177,5 @@ def showResolution(sheetId):
         total += correction.grade
 
     return render_template(
-        "showResolution.html", sheetId=sheetId, corrections=corrections, total=total
+        "show_resolution.html", sheet_id=sheet_id, corrections=corrections, total=total
     )

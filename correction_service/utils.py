@@ -5,14 +5,14 @@ import pymupdf
 from settings import QUESTIONS
 
 
-def parseInt(text):
+def parse_int(text):
     try:
         return int(text)
     except ValueError:
         return None
 
 
-def parseGrade(text):
+def parse_grade(text):
     try:
         return float(text)
     except ValueError:
@@ -107,7 +107,7 @@ def cover_qr_codes_with_gray_squares(
             )
 
 
-def splitScan(pdf):
+def split_scan(pdf):
     try:
         document = pymupdf.open(stream=pdf, filetype="pdf")
     except pymupdf.FileDataError:
@@ -117,39 +117,39 @@ def splitScan(pdf):
             f"the scan has {document.page_count} pages, expected a multiple of {QUESTIONS}"
         )
 
-    pageDocuments = split_pdf_into_pages(document)
-    qrValues = read_qr_code_values(pageDocuments)
-    cover_qr_codes_with_gray_squares(pageDocuments)
+    page_documents = split_pdf_into_pages(document)
+    qr_values = read_qr_code_values(page_documents)
+    cover_qr_codes_with_gray_squares(page_documents)
 
     pages = []
     seen = []
-    for first_sheet_page in range(0, len(pageDocuments), QUESTIONS):
-        sheetIds = []
-        for values in qrValues[first_sheet_page : first_sheet_page + QUESTIONS]:
+    for first_sheet_page in range(0, len(page_documents), QUESTIONS):
+        sheet_ids = []
+        for values in qr_values[first_sheet_page : first_sheet_page + QUESTIONS]:
             for value in values:
-                if value.isdigit() and int(value) not in sheetIds:
-                    sheetIds.append(int(value))
+                if value.isdigit() and int(value) not in sheet_ids:
+                    sheet_ids.append(int(value))
 
-        if len(sheetIds) != 1:
+        if len(sheet_ids) != 1:
             raise ValueError(
                 f"pages {first_sheet_page + 1} - {first_sheet_page + QUESTIONS} could not read the sheet's QR code"
             )
 
-        sheetId = sheetIds.pop()
-        if sheetId in seen:
+        sheet_id = sheet_ids.pop()
+        if sheet_id in seen:
             raise ValueError(
-                f"pages {first_sheet_page + 1} - {first_sheet_page + QUESTIONS} sheet {sheetId} appears twice"
+                f"pages {first_sheet_page + 1} - {first_sheet_page + QUESTIONS} sheet {sheet_id} appears twice"
             )
 
-        seen.append(sheetId)
+        seen.append(sheet_id)
 
-        sheetPages = pageDocuments[first_sheet_page : first_sheet_page + QUESTIONS]
-        for questionNumber, pageDocument in enumerate(sheetPages, start=1):
-            pixmap = pageDocument[0].get_pixmap(
+        sheet_pages = page_documents[first_sheet_page : first_sheet_page + QUESTIONS]
+        for question_number, page_document in enumerate(sheet_pages, start=1):
+            pixmap = page_document[0].get_pixmap(
                 matrix=pymupdf.Matrix(2, 2),
                 colorspace=pymupdf.csRGB,
                 alpha=False,
             )
-            pages.append((sheetId, questionNumber, pixmap.tobytes("png")))
+            pages.append((sheet_id, question_number, pixmap.tobytes("png")))
 
     return pages

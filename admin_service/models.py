@@ -13,7 +13,7 @@ class Exam(Base):
     course = Column(String, nullable=False)
 
     enrollments = relationship(
-        "Enrollment", back_populates="exam", order_by="Enrollment.studentId"
+        "Enrollment", back_populates="exam", order_by="Enrollment.student_id"
     )
 
     def __repr__(self):
@@ -39,8 +39,8 @@ class Exam(Base):
         return session.query(cls).order_by(cls.id).all()
 
     @classmethod
-    def get(cls, examId):
-        return session.get(cls, examId)
+    def get(cls, exam_id):
+        return session.get(cls, exam_id)
 
     @classmethod
     def create(cls, date, course):
@@ -54,36 +54,36 @@ class Exam(Base):
 
 class Enrollment(Base):
     __tablename__ = "enrollments"
-    examId = Column(Integer, ForeignKey("exams.id"), primary_key=True)
-    studentId = Column(Integer, primary_key=True)
+    exam_id = Column(Integer, ForeignKey("exams.id"), primary_key=True)
+    student_id = Column(Integer, primary_key=True)
 
     exam = relationship("Exam", back_populates="enrollments")
 
     def __repr__(self):
-        return f"<Enrollment(examId={self.examId}, studentId={self.studentId})>"
+        return f"<Enrollment(exam_id={self.exam_id}, student_id={self.student_id})>"
 
     @classmethod
     def all(cls):
-        return session.query(cls).order_by(cls.examId, cls.studentId).all()
+        return session.query(cls).order_by(cls.exam_id, cls.student_id).all()
 
     @classmethod
-    def bulkCreate(cls, examId, studentIds):
-        newIds = []
-        existing = session.query(cls).filter(cls.examId == examId)
+    def bulk_create(cls, exam_id, student_ids):
+        new_ids = []
+        existing = session.query(cls).filter(cls.exam_id == exam_id)
 
         enrolled = []
         for enrollment in existing:
-            enrolled.append(enrollment.studentId)
+            enrolled.append(enrollment.student_id)
 
-        for studentId in studentIds:
-            if studentId not in enrolled:
-                session.add(cls(examId=examId, studentId=studentId))
-                enrolled.append(studentId)
-                newIds.append(studentId)
+        for student_id in student_ids:
+            if student_id not in enrolled:
+                session.add(cls(exam_id=exam_id, student_id=student_id))
+                enrolled.append(student_id)
+                new_ids.append(student_id)
 
         session.commit()
 
-        return newIds
+        return new_ids
 
 
 Base.metadata.create_all(engine)

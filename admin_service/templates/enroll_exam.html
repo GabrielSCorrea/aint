@@ -3,9 +3,9 @@
 {% block content %}
 <h3>Enroll Students: {{exam.course}} ({{exam.date}})</h3>
 
-{% if newIds is defined %}
+{% if new_ids is defined %}
 <p style="color:green">
-  Enrolled {{newIds | length}} new student(s){% if newIds %}: {{newIds | join(", ")}}{% endif %}.
+  Enrolled {{new_ids | length}} new student(s){% if new_ids %}: {{new_ids | join(", ")}}{% endif %}.
   {% if skipped %}{{skipped}} already enrolled student(s) skipped.{% endif %}
 </p>
 {% endif %}
@@ -19,14 +19,14 @@
 
 <p>One student id per line:</p>
 <form action="/exams/{{exam.id}}/enroll" method="post">
-  <textarea name="studentIds" rows="12" cols="20">{{studentIdsText}}</textarea>
+  <textarea name="student_ids" rows="12" cols="20">{{student_ids_text}}</textarea>
   <p><input type="submit"></p>
 </form>
 
 <h4>Enrolled students ({{exam.enrollments | length}})</h4>
 {% if exam.enrollments %}
 <ul>
-  {% for en in exam.enrollments %}<li>{{en.studentId}}</li>{% endfor %}
+  {% for en in exam.enrollments %}<li>{{en.student_id}}</li>{% endfor %}
 </ul>
 {% else %}
 <p>No students enrolled.</p>

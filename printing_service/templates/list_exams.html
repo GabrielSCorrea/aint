@@ -6,13 +6,13 @@
 {% if exams %}
 <table border="1">
   <tr><th>Exam Id</th><th>Date</th><th>Course</th><th>Sheets</th><th></th></tr>
-  {% for examId, date, course, sheetsNum in exams %}
+  {% for exam_id, date, course, sheets_num in exams %}
   <tr>
-    <td>{{examId}}</td>
+    <td>{{exam_id}}</td>
     <td>{{date}}</td>
     <td>{{course}}</td>
-    <td>{{sheetsNum}}</td>
-    <td><a href="/exams/{{examId}}/pdf">Download PDF</a></td>
+    <td>{{sheets_num}}</td>
+    <td><a href="/exams/{{exam_id}}/pdf">Download PDF</a></td>
   </tr>
   {% endfor %}
 </table>

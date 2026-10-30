@@ -16,7 +16,7 @@
 <text x="276" y="153" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="380" y="153" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
 <line x1="41" y1="166" x2="539" y2="166" stroke="#e3e7ec" stroke-width="1"/>
-<text x="132" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">examId</text>
+<text x="132" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">exam_id</text>
 <text x="276" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="380" y="189" font-size="12.5" fill="#5d6875">NOT NULL</text>
 <line x1="41" y1="202" x2="539" y2="202" stroke="#e3e7ec" stroke-width="1"/>
@@ -34,22 +34,22 @@
 <line x1="41" y1="374" x2="539" y2="374" stroke="#e3e7ec" stroke-width="1"/>
 <rect x="54" y="383" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
 <text x="69" y="396" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
-<text x="132" y="397" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">examId</text>
+<text x="132" y="397" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">exam_id</text>
 <text x="276" y="397" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="380" y="397" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
 <line x1="41" y1="410" x2="539" y2="410" stroke="#e3e7ec" stroke-width="1"/>
 <rect x="54" y="419" width="30" height="18" rx="9" fill="#ffffff" stroke="#1e3a5f" stroke-width="1.2"/>
 <text x="69" y="432" font-size="10.5" fill="#1e3a5f" font-weight="bold" text-anchor="middle">PK</text>
-<text x="132" y="433" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">questionNumber</text>
+<text x="132" y="433" font-size="14" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">question_number</text>
 <text x="276" y="433" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="380" y="433" font-size="12.5" fill="#5d6875">PRIMARY KEY</text>
 <line x1="41" y1="446" x2="539" y2="446" stroke="#e3e7ec" stroke-width="1"/>
-<text x="132" y="469" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">professorId</text>
+<text x="132" y="469" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">professor_id</text>
 <text x="276" y="469" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="380" y="469" font-size="12.5" fill="#5d6875">NOT NULL</text>
 <line x1="290" y1="482" x2="290" y2="512" stroke="#7a8796" stroke-width="1.4" stroke-dasharray="5 4"/>
 <rect x="40" y="512" width="500" height="60" rx="6" fill="#f8fafc" stroke="#c3cbd5" stroke-width="1.25"/>
-<text x="56" y="536" font-size="13" fill="#2b3440" font-weight="bold">Composite primary key (examId, questionNumber)</text>
+<text x="56" y="536" font-size="13" fill="#2b3440" font-weight="bold">Composite primary key (exam_id, question_number)</text>
 <text x="56" y="558" font-size="13" fill="#2b3440">each question of an exam is corrected by a single professor</text>
 <rect x="680" y="56" width="500" height="326" rx="8" fill="#ffffff" stroke="#c3cbd5" stroke-width="1.25"/>
 <path d="M680,102 V64 Q680,56 688,56 H1172 Q1180,56 1180,64 V102 Z" fill="#1e3a5f"/>
@@ -68,15 +68,15 @@
 <line x1="681" y1="166" x2="1179" y2="166" stroke="#e3e7ec" stroke-width="1"/>
 <rect x="694" y="175" width="30" height="18" rx="9" fill="#ffffff" stroke="#2563a8" stroke-width="1.2"/>
 <text x="709" y="188" font-size="10.5" fill="#2563a8" font-weight="bold" text-anchor="middle">FK</text>
-<text x="772" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">examPdfId</text>
+<text x="772" y="189" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">exam_pdf_id</text>
 <text x="916" y="189" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="1020" y="189" font-size="12.5" fill="#5d6875">NOT NULL</text>
 <line x1="681" y1="202" x2="1179" y2="202" stroke="#e3e7ec" stroke-width="1"/>
-<text x="772" y="225" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">sheetId</text>
+<text x="772" y="225" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">sheet_id</text>
 <text x="916" y="225" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="1020" y="225" font-size="12.5" fill="#5d6875">NOT NULL</text>
 <line x1="681" y1="238" x2="1179" y2="238" stroke="#e3e7ec" stroke-width="1"/>
-<text x="772" y="261" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">questionNumber</text>
+<text x="772" y="261" font-size="14" fill="#2b3440" font-family="Menlo, Consolas, monospace">question_number</text>
 <text x="916" y="261" font-size="13.5" fill="#5d6875" font-family="Menlo, Consolas, monospace">Integer</text>
 <text x="1020" y="261" font-size="12.5" fill="#5d6875">NOT NULL</text>
 <line x1="681" y1="274" x2="1179" y2="274" stroke="#e3e7ec" stroke-width="1"/>
@@ -103,9 +103,9 @@
 <line x1="930" y1="382" x2="930" y2="412" stroke="#7a8796" stroke-width="1.4" stroke-dasharray="5 4"/>
 <rect x="680" y="412" width="500" height="98" rx="6" fill="#f8fafc" stroke="#c3cbd5" stroke-width="1.25"/>
 <text x="696" y="436" font-size="13" fill="#2b3440" font-weight="bold">Filled when a scan is uploaded (AD_5)</text>
-<text x="696" y="458" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">sheetId</text>
+<text x="696" y="458" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">sheet_id</text>
 <text x="822" y="458" font-size="13" fill="#2b3440">read from the page&#x27;s QR code</text>
-<text x="696" y="477" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">questionNumber</text>
+<text x="696" y="477" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">question_number</text>
 <text x="822" y="477" font-size="13" fill="#2b3440">position of the page in the sheet</text>
 <text x="696" y="496" font-size="12.5" fill="#2b3440" font-weight="bold" font-family="Menlo, Consolas, monospace">image</text>
 <text x="822" y="496" font-size="13" fill="#2b3440">PNG of the page with the QR codes covered</text>

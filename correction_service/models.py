@@ -15,38 +15,38 @@ from settings import MAX_GRADE, QUESTIONS, Base, engine, session
 
 class ProfessorAssignment(Base):
     __tablename__ = "professor_assignments"
-    examId = Column(Integer, primary_key=True)
-    questionNumber = Column(Integer, primary_key=True)
-    professorId = Column(Integer, nullable=False)
+    exam_id = Column(Integer, primary_key=True)
+    question_number = Column(Integer, primary_key=True)
+    professor_id = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return f"<ProfessorAssignment(examId={self.examId}, questionNumber={self.questionNumber}, professorId={self.professorId})>"
+        return f"<ProfessorAssignment(exam_id={self.exam_id}, question_number={self.question_number}, professor_id={self.professor_id})>"
 
     @staticmethod
-    def validate(examId, questionNumber, professorId):
-        if examId is None or examId < 1:
+    def validate(exam_id, question_number, professor_id):
+        if exam_id is None or exam_id < 1:
             return "invalid exam id"
 
-        if questionNumber not in range(1, QUESTIONS + 1):
+        if question_number not in range(1, QUESTIONS + 1):
             return f"question number must be between 1 and {QUESTIONS}"
 
-        if professorId is None or professorId < 1:
+        if professor_id is None or professor_id < 1:
             return "invalid professor id"
 
         return None
 
     @classmethod
     def all(cls):
-        return session.query(cls).order_by(cls.examId, cls.questionNumber).all()
+        return session.query(cls).order_by(cls.exam_id, cls.question_number).all()
 
     @classmethod
-    def get(cls, examId, questionNumber):
-        return session.get(cls, (examId, questionNumber))
+    def get(cls, exam_id, question_number):
+        return session.get(cls, (exam_id, question_number))
 
     @classmethod
-    def assign(cls, examId, questionNumber, professorId):
+    def assign(cls, exam_id, question_number, professor_id):
         assignment = cls(
-            examId=examId, questionNumber=questionNumber, professorId=professorId
+            exam_id=exam_id, question_number=question_number, professor_id=professor_id
         )
 
         session.add(assignment)
@@ -58,21 +58,21 @@ class ProfessorAssignment(Base):
 class ExamCorrectionPdf(Base):
     __tablename__ = "exam_correction_pdfs"
     id = Column(Integer, primary_key=True)
-    examId = Column(Integer, nullable=False)
+    exam_id = Column(Integer, nullable=False)
     pdf = deferred(Column(LargeBinary, nullable=False))
 
     corrections = relationship(
         "QuestionCorrection",
-        back_populates="examPdf",
+        back_populates="exam_pdf",
         order_by="QuestionCorrection.id",
     )
 
     def __repr__(self):
-        return f"<ExamCorrectionPdf(id={self.id}, examId={self.examId})>"
+        return f"<ExamCorrectionPdf(id={self.id}, exam_id={self.exam_id})>"
 
     @staticmethod
-    def validate(examId):
-        if examId is None or examId < 1:
+    def validate(exam_id):
+        if exam_id is None or exam_id < 1:
             return "invalid exam id"
 
         return None
@@ -82,75 +82,77 @@ class ExamCorrectionPdf(Base):
         return session.query(cls).order_by(cls.id).all()
 
     @classmethod
-    def get(cls, examPdfId):
-        return session.get(cls, examPdfId)
+    def get(cls, exam_pdf_id):
+        return session.get(cls, exam_pdf_id)
 
     @classmethod
-    def create(cls, examId, pdf, pages):
-        examPdf = cls(examId=examId, pdf=pdf)
-        for sheetId, questionNumber, image in pages:
-            examPdf.corrections.append(
+    def create(cls, exam_id, pdf, pages):
+        exam_pdf = cls(exam_id=exam_id, pdf=pdf)
+        for sheet_id, question_number, image in pages:
+            exam_pdf.corrections.append(
                 QuestionCorrection(
-                    sheetId=sheetId, questionNumber=questionNumber, image=image
+                    sheet_id=sheet_id, question_number=question_number, image=image
                 )
             )
 
-        session.add(examPdf)
+        session.add(exam_pdf)
         session.commit()
 
-        return examPdf
+        return exam_pdf
 
 
 class QuestionCorrection(Base):
     __tablename__ = "question_corrections"
     id = Column(Integer, primary_key=True)
-    examPdfId = Column(Integer, ForeignKey("exam_correction_pdfs.id"), nullable=False)
-    sheetId = Column(Integer, nullable=False)
-    questionNumber = Column(Integer, nullable=False)
+    exam_pdf_id = Column(Integer, ForeignKey("exam_correction_pdfs.id"), nullable=False)
+    sheet_id = Column(Integer, nullable=False)
+    question_number = Column(Integer, nullable=False)
     image = deferred(Column(LargeBinary, nullable=False))
     evaluated = Column(Boolean, nullable=False, default=False)
     grade = Column(Float)
 
-    examPdf = relationship("ExamCorrectionPdf", back_populates="corrections")
+    exam_pdf = relationship("ExamCorrectionPdf", back_populates="corrections")
 
     def __repr__(self):
-        return f"<QuestionCorrection(id={self.id}, sheetId={self.sheetId}, questionNumber={self.questionNumber})>"
+        return f"<QuestionCorrection(id={self.id}, sheet_id={self.sheet_id}, question_number={self.question_number})>"
 
     @staticmethod
-    def validateGrade(grade):
+    def validate_grade(grade):
         if grade is None or not 0 <= grade <= MAX_GRADE:
             return f"grade must be a number between 0 and {MAX_GRADE}"
 
         return None
 
     @classmethod
-    def get(cls, correctionId):
-        return session.get(cls, correctionId)
+    def get(cls, correction_id):
+        return session.get(cls, correction_id)
 
     @classmethod
-    def listWithProfessor(cls, evaluated):
+    def list_with_professor(cls, evaluated):
         return (
-            session.query(cls, ProfessorAssignment.professorId)
-            .join(cls.examPdf)
+            session.query(cls, ProfessorAssignment.professor_id)
+            .join(cls.exam_pdf)
             .outerjoin(
                 ProfessorAssignment,
                 and_(
-                    ProfessorAssignment.examId == ExamCorrectionPdf.examId,
-                    ProfessorAssignment.questionNumber == cls.questionNumber,
+                    ProfessorAssignment.exam_id == ExamCorrectionPdf.exam_id,
+                    ProfessorAssignment.question_number == cls.question_number,
                 ),
             )
             .filter(cls.evaluated == evaluated)
-            .order_by(ExamCorrectionPdf.examId, cls.questionNumber, cls.id)
+            .order_by(ExamCorrectionPdf.exam_id, cls.question_number, cls.id)
             .all()
         )
 
     @classmethod
-    def uploadedSheets(cls, sheetIds):
-        rows = session.query(cls.sheetId).filter(cls.sheetId.in_(sheetIds)).distinct()
+    def uploaded_sheets(cls, sheet_ids):
+        rows = (
+            session.query(cls.sheet_id).filter(cls.sheet_id.in_(sheet_ids)).distinct()
+        )
 
         uploaded = []
         for row in rows:
-            uploaded.append(row.sheetId)
+            uploaded.append(row.sheet_id)
 
         return sorted(uploaded)
 
@@ -158,23 +160,23 @@ class QuestionCorrection(Base):
     def sheets(cls):
         return (
             session.query(
-                cls.sheetId,
-                ExamCorrectionPdf.examId,
+                cls.sheet_id,
+                ExamCorrectionPdf.exam_id,
                 func.count(cls.grade),
                 func.sum(cls.grade),
             )
-            .join(cls.examPdf)
-            .group_by(cls.sheetId, ExamCorrectionPdf.examId)
-            .order_by(cls.sheetId)
+            .join(cls.exam_pdf)
+            .group_by(cls.sheet_id, ExamCorrectionPdf.exam_id)
+            .order_by(cls.sheet_id)
             .all()
         )
 
     @classmethod
-    def forSheet(cls, sheetId):
+    def for_sheet(cls, sheet_id):
         return (
             session.query(cls)
-            .filter(cls.sheetId == sheetId)
-            .order_by(cls.questionNumber)
+            .filter(cls.sheet_id == sheet_id)
+            .order_by(cls.question_number)
             .all()
         )
 
